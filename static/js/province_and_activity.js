@@ -1,81 +1,3 @@
-// const hierarchy = {
-//     "provinces": {
-//         "Province 1": {
-//             "districts": {
-//                 "Bhojpur": {
-//                     "palikas": [
-//                         "Bhojpur",
-//                         "Salpa Silichho"
-//                     ]
-//                 },
-//                 "Dhankuta": {
-//                     "palikas": [
-//                         "Dhankuta",
-//                         "Chhathar Jorpati"
-//                     ]
-//                 },
-//                 "Ilam": {
-//                     "palikas": [
-//                         "Mai Municipality",
-//                         "Chulachuli",
-//                         "Fakfokthum"
-//                     ]
-//                 }
-//             }
-//         },
-//         "Province 2": {
-//             "districts": {
-//                 "Bara": {
-//                     "palikas": [
-//                         "Kalaiya",
-//                         "Simraungadh",
-//                         "Nijgadh"
-//                     ]
-//                 },
-//                 "Parsa": {
-//                     "palikas": [
-//                         "Birgunj",
-//                         "Thori",
-//                         "Jirabhawani",
-//                         "Chhipaharmai",
-//                         "Sakhuwa Prasauni"
-//                     ]
-//                 }
-//             }
-//         },
-//         "Bagmati Province": {
-//             "districts": {
-//                 "Kathmandu": {
-//                     "palikas": [
-//                         "Kathmandu",
-//                         "Kageshwari-Manohara",
-//                         "Budhanilkantha",
-//                         "Dakshinkali",
-//                         "Gokarneshwor",
-//                         "Nagarjun",
-//                         "Shankharapur",
-//                         "Tarakeshwar"
-//                     ]
-//                 },
-//                 "Lalitpur": {
-//                     "palikas": [
-//                         "Lalitpur",
-//                         "Godawari",
-//                         "Mahalaxmi"
-//                     ]
-//                 },
-//                 "Bhaktapur": {
-//                     "palikas": [
-//                         "Bhaktapur",
-//                         "Changunarayan",
-//                         "Madhyapur Thimi"
-//                     ]
-//                 }
-//             }
-//         }
-//     }
-// };
-
 async function getActivities() {
     const data = await axios.get('http://127.0.0.1:8000/activities/')
         .then(function (response) {
@@ -104,12 +26,21 @@ async function getAllProvinceData() {
 
 
 
+
+
 window.onload = async function () {
 
 
     const activity = await getActivities();
 
-    console.log(activity)
+    // const currentActivityCode = document.getElementById('current_activity_code');
+    // const currenActivityName = document.getElementById('current_activity_name');
+
+    // if (currentActivityCode == null) {
+    //     console.log("In Other Pages")
+    // } else {
+    //     console.log("In the Participant Data Entry Page")
+    // }
 
     if (activity != null) {
 
@@ -120,6 +51,13 @@ window.onload = async function () {
             const option = document.createElement('option');
             option.value = act.code;
             option.textContent = act.code;
+
+
+            // setting the option to the selected if the option is found
+            // if (currentActivityCode != null && currentActivityCode.textContent == act.code) {
+            //     option.selected = true
+            // }
+
             activitySelect.appendChild(option);
         });
 
@@ -128,6 +66,14 @@ window.onload = async function () {
             const selectedActivity = activity.find((act) => act.code === selectedCode);
             activityNameInput.value = selectedActivity ? selectedActivity.name : '';
         });
+
+
+        // // setting the data send from the server to the activity name, start date and end date
+        // if (currentActivityCode != null) {
+        //     activityNameInput.value = currenActivityName.textContent
+        
+
+        // }
 
     }
 

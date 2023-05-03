@@ -1,300 +1,253 @@
 {% extends 'base.html' %}
-
-
+{% load static %}
 {% block main%}
-
 <div>
-    <div class="activity">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-3">
-            <label for="activity">Activity Code</label>
-            <select class="form-select" id="activity">
-              <option disabled selected>Select an Activity Code</option>
-            </select>
-          </div>
+  <div class="activity">
 
-          <div class="col-lg-3">
-            <label for="activity-name">Activity Name</label>
-            <input
-              class="form form-control"
-              type="text"
-              disabled
-              id="activity-name"
-            />
-          </div>
 
-          <div class="col-lg-3">
-            <div>
-              <label for="start-date">Start Date</label>
-              <input type="date" class="form-control" />
-            </div>
-          </div>
 
-          <div class="col-lg-3">
-            <label for="start-date">End Date</label>
-            <input type="date" class="form-control" />
+    <div class="d-none">
+      <div id="event_start_date">{{current_event.start_date}}</div>
+      <div id="event_end_date">{{current_event.end_date}}</div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-3">
+          <label for="activity">Activity Code</label>
+
+          <select class="form-select" id="activity" disabled>
+            <option value="{{current_event.activity.code}}">{{current_event.activity.code}}</option>
+          </select>
+        </div>
+
+        <div class="col-lg-3">
+          <label for="activity-name">Activity Name</label>
+          <input class="form form-control" type="text" disabled id="activity-name"
+            value="{{current_event.activity.name}}" />
+        </div>
+
+        <div class="col-lg-3">
+          <div>
+            <label for="start-date">Start Date</label>
+            <input id="start_date" type="date" class="form-control" disabled />
           </div>
         </div>
-      </div>
 
-      <!-- venue section -->
-      <div class="venue-section mt-3 container">
-        <div class="row">
-          <div class="col-lg-3">
-            <label for="province-select">Province</label>
-            <select class="form-select" id="province-select">
-              <option value="">Select a province</option>
-            </select>
-          </div>
-          <div class="col-lg-3">
-            <label for="district-select">District</label>
-            <select class="form-select" id="district-select">
-              <option value="">Select a district</option>
-            </select>
-          </div>
-          <div class="col-lg-3">
-            <label for="palika-select">Palika</label>
-            <select class="form-select" id="palika-select">
-              <option value="">Select a palika</option>
-            </select>
-          </div>
-          <div class="col-lg-3">
-            <label for="ward">Ward</label>
-            <input
-              class="form-control"
-              placeholder="Valid (1 to 35)"
-              type="number"
-              min="1"
-              max="35"
-              oninput="validity.valid||(value='');"
-            />
-          </div>
+        <div class="col-lg-3">
+          <label for="start-date">End Date</label>
+          <input id="end_date" type="date" class="form-control" disabled />
         </div>
       </div>
+    </div>
 
-      <!-- Modal TO Add Participant Start -->
-      <div class="add-data container">
-        <!-- Button trigger modal -->
-        <button
-          type="button"
-          class="btn btn-primary mt-5"
-          data-mdb-toggle="modal"
-          data-mdb-target="#staticBackdrop"
-        >
-          Add Participant Data
-        </button>
+    <!-- venue section -->
+    <div class="venue-section mt-3 container">
+      <div class="row">
+        <div class="col-lg-3">
+          <label for="province-select">Province</label>
+          <select class="form-select" id="province-select" disabled>
+            {% if data_entry_page %}
+            <option value="{{current_event.province}}" disabled>{{current_event.province}}</option>
+            {% else %}
+            <option value="">Select a province</option>
+            {% endif %}
+          </select>
+        </div>
+        <div class="col-lg-3">
+          <label for="district-select">District</label>
+          <select class="form-select" id="district-select" disabled>
+            <option value="{{current_event.district}}">{{current_event.district}}</option>
+          </select>
+        </div>
+        <div class="col-lg-3">
+          <label for="palika-select">Palika</label>
+          <select class="form-select" id="palika-select" disabled>
+            <option value="{{current_event.palika}}">{{current_event.palika}}</option>
+          </select>
+        </div>
+        <div class="col-lg-3">
+          <label for="ward">Ward</label>
+          <input class="form-control" placeholder="Valid (1 to 35)" type="number" min="1" max="35"
+            value="{{current_event.ward}}" disabled oninput="validity.valid||(value='');" />
+        </div>
+      </div>
+    </div>
 
-        <!-- Modal -->
-        <div
-          class="modal fade"
-          id="staticBackdrop"
-          data-mdb-backdrop="static"
-          data-mdb-keyboard="false"
-          tabindex="-1"
-          aria-labelledby="staticBackdropLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog modal-dialog-scrollable">
-            <div class="modal-content">
-              <form>
-                <div class="modal-body">
-                  <div class="participant-data">
-                    <div class="row">
-                      <div class="col-lg-4">
-                        <div class="form-group mb-3">
-                          <label for="name">Name of Participant</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="name"
-                            name="name"
-                          />
-                        </div>
-                        <div class="form-group mb-3">
-                          <label for="organization"
-                            >Affiliated Organization</label
-                          >
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="organization"
-                            name="organization"
-                          />
-                        </div>
-                        <div class="form-group mb-3">
-                          <label for="designation">Designation</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="designation"
-                            name="designation"
-                          />
-                        </div>
+    <!-- Modal TO Add Participant Start -->
+    <div class="add-data container">
+      <!-- Button trigger modal -->
+      <button type="button" class="btn btn-primary mt-5" data-mdb-toggle="modal" data-mdb-target="#staticBackdrop">
+        Add Participant Data
+      </button>
 
-                        <div class="form-group mb-3">
-                          <label for="email">Email ID</label>
-                          <input
-                            type="email"
-                            class="form-control"
-                            id="email"
-                            name="email"
-                          />
-                        </div>
+      <!-- Modal -->
+      <div class="modal fade" id="staticBackdrop" data-mdb-backdrop="static" data-mdb-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+          <div class="modal-content">
+            <form method="POST">
+              {% csrf_token%}
+              <div class="modal-body">
+                <div class="participant-data">
+                  <div class="row">
+                    <div class="col-lg-4">
+                      <div class="form-group mb-3">
+                        <label for="name">Name of Participant</label>
+                        <input type="text" class="form-control" id="name" name="name"  required/>
+                      </div>
+                      <div class="form-group mb-3">
+                        <label for="organization">Affiliated Organization</label>
+                        <input type="text" class="form-control" id="organization" name="affiliated_org" required/>
+                      </div>
+                      <div class="form-group mb-3">
+                        <label for="designation">Designation</label>
+                        <input type="text" class="form-control" id="designation" name="designation" required/>
                       </div>
 
-                      <div class="col-lg-4">
-                        <div class="form-group mb-3">
-                          <label for="age">Age</label>
-                          <input
-                            type="number"
-                            class="form-control"
-                            id="age"
-                            name="age"
-                          />
-                        </div>
-                        <div class="form-group mb-3">
-                          <label for="sex">Sex</label>
-                          <select class="form-select" id="sex" name="sex">
-                            <option value="">-- Select --</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                            <option value="other">Other</option>
-                          </select>
-                        </div>
-                        <div class="form-group mb-3">
-                          <label for="ethnicity">Ethnicity</label>
-                          <select
-                            class="form-select"
-                            id="ethnicity"
-                            name="ethnicity"
-                          >
-                            <option value="">-- Select --</option>
-                            <option value="ethnicity1">
-                              Ethnicity 1
-                            </option>
-                            <option value="ethnicity2">
-                              Ethnicity 2
-                            </option>
-                            <option value="ethnicity3">
-                              Ethnicity 3
-                            </option>
-                          </select>
-                        </div>
+                      <div class="form-group mb-3">
+                        <label for="email">Email ID</label>
+                        <input type="email" class="form-control" id="email" name="email" required/>
                       </div>
-                      <div class="col-lg-4">
-                        <div class="form-group mb-3">
-                          <label for="pwd">Pwd Status</label>
-                          <select class="form-select" id="pwd" name="pwd">
-                            <option value="">-- Select --</option>
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
-                          </select>
-                        </div>
-                        <div class="form-group mb-3">
-                          <label for="category"
-                            >Participation Category</label
-                          >
-                          <select
-                            class="form-select"
-                            id="category"
-                            name="category"
-                          >
-                            <option value="">-- Select --</option>
-                            <option value="category1">Category 1</option>
-                            <option value="category2">Category 2</option>
-                            <option value="category3">Category 3</option>
-                          </select>
-                        </div>
-                        <div class="form-group mb-3">
-                          <label for="contact">Contact Number</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="contact"
-                            name="contact"
-                          />
-                        </div>
+                    </div>
 
-                        <div class="form-group mb-3">
-                          <label for="responsible"
-                            >Person Responsible</label
-                          >
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="responsible"
-                            name="responsible"
-                          />
-                        </div>
+                    <div class="col-lg-4">
+                      <div class="form-group mb-3">
+                        <label for="age">Age</label>
+                        <input type="number" class="form-control" id="age" name="age" required/>
+                      </div>
+                      <div class="form-group mb-3">
+                        <label for="sex">Sex</label>
+                        <select class="form-select" id="sex" name="gender" required>
+                          <option value="">-- Select --</option>
+                          <option value="male">Male</option>
+                          <option value="female">Female</option>
+                          <option value="other">Other</option>
+                        </select>
+                      </div>
+                      <div class="form-group mb-3">
+                        <label for="ethnicity">Ethnicity</label>
+                        <select class="form-select" id="ethnicity" name="ethnicity" required>
+                          <option value="">-- Select --</option>
+                          <option value="ethnicity1">
+                            Ethnicity 1
+                          </option>
+                          <option value="ethnicity2">
+                            Ethnicity 2
+                          </option>
+                          <option value="ethnicity3">
+                            Ethnicity 3
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-lg-4">
+                      <div class="form-group mb-3">
+                        <label for="pwd">Pwd Status</label>
+                        <select class="form-select" id="pwd" name="pwd" required>
+                          <option value="">-- Select --</option>
+                          <option value="yes">Yes</option>
+                          <option value="no">No</option>
+                        </select>
+                      </div>
+                      <div class="form-group mb-3">
+                        <label for="category">Participation Category</label>
+                        <select class="form-select" id="category" name="category">
+                          <option value="">-- Select --</option>
+                          <option value="category1">Category 1</option>
+                          <option value="category2">Category 2</option>
+                          <option value="category3">Category 3</option>
+                        </select>
+                      </div>
+                      <div class="form-group mb-3">
+                        <label for="contact">Contact Number</label>
+                        <input type="text" class="form-control" id="contact" name="contact" required/>
+                      </div>
+
+                      <div class="form-group mb-3">
+                        <label for="responsible">Person Responsible</label>
+                        <input type="text" class="form-control" id="responsible" name="responsible" required/>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div class="modal-footer">
-                  <button
-                    type="button"
-                    class="btn btn-danger"
-                    data-mdb-dismiss="modal"
-                  >
-                    Close
-                  </button>
-                  <button type="button" class="btn btn-primary">
-                    Upload Data
-                  </button>
-                </div>
-              </form>
-            </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-mdb-dismiss="modal">
+                  Close
+                </button>
+                <button type="submit" class="btn btn-primary">
+                  Upload Data
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
-      <!-- Modal to AdD Participant Data End -->
-
-      <!-- Participant Data Table -->
-      <table
-        class="table table-bordered align-middle mb-0 bg-white border-top mt-5 table-sm mb-5"
-      >
-        <thead class="bg-light">
-          <tr>
-            <th class="col small">S.N.</th>
-            <th class="col small">Name</th>
-            <th class="col small">Aff. Org</th>
-            <th class="col small">Designation</th>
-            <th class="col small">Email</th>
-            <th class="col small">Age</th>
-            <th class="col small">Sex</th>
-            <th class="col small">Ethnicity</th>
-            <th class="col small">PwD</th>
-            <th class="col small">Part. Category</th>
-            <th class="col small">Contact</th>
-            <th class="col small">Person Responsible</th>
-            <th class="col small">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="col small">1</td>
-            <td class="col small">Achyut Subba</td>
-            <td class="col small">Retro Nepal Pvt. Ltd.</td>
-            <td class="col small">Secretary</td>
-            <td class="col small">achyut.subba@gmail.com</td>
-            <td class="col small">21</td>
-            <td class="col small">Female</td>
-            <td class="col small">Ethnicity 1</td>
-            <td class="col small">No</td>
-            <td class="col small">Teachers</td>
-            <td class="col small">9808123423</td>
-            <td class="col small">Sima Das</td>
-            <td>
-              <button class="btn btn-sm btn-primary">Edit</button>
-              <button class="btn btn-sm btn-danger mt-2">Delete</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <!-- Participant Data Table End -->
     </div>
+    <!-- Modal to AdD Participant Data End -->
+
+    <!-- Participant Data Table -->
+    <table class="table table-bordered align-middle mb-0 bg-white border-top mt-5 table-sm mb-5">
+      <thead class="bg-light">
+        <tr>
+          <th class="col small">S.N.</th>
+          <th class="col small">Name</th>
+          <th class="col small">Aff. Org</th>
+          <th class="col small">Designation</th>
+          <th class="col small">Email</th>
+          <th class="col small">Age</th>
+          <th class="col small">Sex</th>
+          <th class="col small">Ethnicity</th>
+          <th class="col small">PwD</th>
+          <th class="col small">Part. Category</th>
+          <th class="col small">Contact</th>
+          <th class="col small">Person Responsible</th>
+          <th class="col small">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col small">1</td>
+          <td class="col small">Achyut Subba</td>
+          <td class="col small">Retro Nepal Pvt. Ltd.</td>
+          <td class="col small">Secretary</td>
+          <td class="col small">achyut.subba@gmail.com</td>
+          <td class="col small">21</td>
+          <td class="col small">Female</td>
+          <td class="col small">Ethnicity 1</td>
+          <td class="col small">No</td>
+          <td class="col small">Teachers</td>
+          <td class="col small">9808123423</td>
+          <td class="col small">Sima Das</td>
+          <td>
+            <button class="btn btn-sm btn-primary">Edit</button>
+            <button class="btn btn-sm btn-danger mt-2">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <!-- Participant Data Table End -->
   </div>
+</div>
 
 
+{% endblock %}
+
+
+{% block js %}
+<script>
+  function formatDateInput(dateString) {
+    const dateObj = new Date(dateString);
+    const year = dateObj.getFullYear();
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const day = String(dateObj.getDate()).padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
+    return formattedDate;
+
+  }
+
+  $('#start_date').val(formatDateInput($('#event_start_date').html()))
+  $('#end_date').val(formatDateInput($('#event_end_date').html()))
+</script>
 {% endblock %}

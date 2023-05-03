@@ -39,7 +39,7 @@ class Participants(models.Model):
     GENDER = (("male", "male"),("female", "female"),("others", "others"))
     gender = models.CharField(max_length=500, choices=GENDER, default="male")
     ETHINICITY = (("dalit","dalit"),)
-    ethinicity = models.CharField(max_length=500, choices=ETHINICITY, blank=True)
+    ethnicity = models.CharField(max_length=500, choices=ETHINICITY, blank=True)
     pwd = models.BooleanField(null=True, blank=True)
     participation_category = models.CharField(max_length=1000, blank=True)
     contact = models.IntegerField(null=True, blank=True)

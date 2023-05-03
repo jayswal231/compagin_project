@@ -68,7 +68,22 @@ class EventUpdateView(UpdateView):
 
 def participant_view(request, id=None):
     template_name = "my_data/data_entry.html"
-    return render(request, template_name)
+    context = {}
+
+    currentEvent = Event.objects.get(id=id)
+    context["current_event"] = currentEvent
+    context["data_entry_page"] = True
+
+
+    # using the form submission to create the participant data
+    if request.method == "POST":
+        query_dict = request.POST.copy()
+        normal_dict = {key: value for key, value in query_dict.items()}
+        normal_dict.pop("csrfmiddlewaretoken")
+        Participants.objects.create(**normal_dict)
+
+
+    return render(request, template_name, context)
 
 
 class ParticipantEditView(UpdateView):
