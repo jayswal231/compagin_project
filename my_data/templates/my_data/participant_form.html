@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+
+{% block main%}
+<form method="POST">
+    <div class="participant-data container">
+      <div class="row">
+        <div class="col-lg-4">
+          <div class="form-group mb-3">
+            <label for="name">Name of Participant</label>
+            <input type="text" class="form-control" id="name" name="name" />
+          </div>
+          <div class="form-group mb-3">
+            <label for="organization">Affiliated Organization</label>
+            <input
+              type="text"
+              class="form-control"
+              id="organization"
+              name="organization"
+            />
+          </div>
+          <div class="form-group mb-3">
+            <label for="designation">Designation</label>
+            <input
+              type="text"
+              class="form-control"
+              id="designation"
+              name="designation"
+            />
+          </div>
+
+          <div class="form-group mb-3">
+            <label for="email">Email ID</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              name="email"
+            />
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="form-group mb-3">
+            <label for="age">Age</label>
+            <input type="number" class="form-control" id="age" name="age" />
+          </div>
+          <div class="form-group mb-3">
+            <label for="sex">Sex</label>
+            <select class="form-select" id="sex" name="sex">
+              <option value="">-- Select --</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group mb-3">
+            <label for="ethnicity">Ethnicity</label>
+            <select class="form-select" id="ethnicity" name="ethnicity">
+              <option value="">-- Select --</option>
+              <option value="ethnicity1">Ethnicity 1</option>
+              <option value="ethnicity2">Ethnicity 2</option>
+              <option value="ethnicity3">Ethnicity 3</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="form-group mb-3">
+            <label for="pwd">Pwd Status</label>
+            <select class="form-select" id="pwd" name="pwd">
+              <option value="">-- Select --</option>
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
+            </select>
+          </div>
+          <div class="form-group mb-3">
+            <label for="category">Participation Category</label>
+            <select class="form-select" id="category" name="category">
+              <option value="">-- Select --</option>
+              <option value="category1">Category 1</option>
+              <option value="category2">Category 2</option>
+              <option value="category3">Category 3</option>
+            </select>
+          </div>
+          <div class="form-group mb-3">
+            <label for="contact">Contact Number</label>
+            <input
+              type="text"
+              class="form-control"
+              id="contact"
+              name="contact"
+            />
+          </div>
+
+          <div class="form-group mb-3">
+            <label for="responsible">Person Responsible</label>
+            <input
+              type="text"
+              class="form-control"
+              id="responsible"
+              name="responsible"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-end">
+      <input type="submit" value="Update Participant Data" class="btn btn-info">
+    </div>
+    </div>
+
+    
+</form>
+
+{% endblock %}

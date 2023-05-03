@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+
+{% block main%}
+<div class="container">
+    <form>
+        <div class="mb-3">
+          <label for="username" class="form-label">Username/Email</label>
+          <input type="email" class="form-control" id="username" required>
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" class="form-control" id="password" required>
+        </div>
+        <div class="mb-3">
+          <label for="user-role" class="form-label">User Role</label>
+          <select class="form-select" id="user-role" required>
+            <option value="">Choose...</option>
+            <option value="role-a">Role A</option>
+            <option value="role-b">Role B</option>
+            <option value="role-c">Role C</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="first-name" class="form-label">First Name</label>
+          <input type="text" class="form-control" id="first-name">
+        </div>
+        <div class="mb-3">
+          <label for="last-name" class="form-label">Last Name</label>
+          <input type="text" class="form-control" id="last-name">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+
+{% endblock %}

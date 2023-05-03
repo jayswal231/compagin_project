@@ -1,0 +1,28 @@
+from django.urls import path
+from .views import *
+urlpatterns = [
+    # for project
+    path('list/', ProjectListView.as_view(), name='project-list'),
+    path('create/', ProjectCreateView.as_view(), name='project-create'),
+    path('update/<int:pk>/', ProjectUpdateView.as_view(), name='project-update'),
+    path('delete/<int:pk>/', ProjectDeleteView.as_view(), name='project-delete'),
+
+    #for activity
+
+
+    # for event
+    path('event/create', EventCreateView.as_view(), name='event-create'),
+    path('event/list', EventListView.as_view(), name='event-list'),
+    path('event/udpate/<int:pk>/', EventUpdateView.as_view(), name='event-update'),
+    # path('event/delete/<int:pk>/', EventDeleteView.as_view(), name='event-delete'),
+
+
+    path('event/<int:id>/participant/list', participant_view, name="participant-view"),
+    path('event/participant/update/<int:pk>', ParticipantEditView.as_view(), name="participant-update"),
+
+
+    path('activities/', ActivityListView.as_view(), name='activity-list'),
+    path('datalist/', DataListView.as_view(), name='data-list'),
+
+    
+]

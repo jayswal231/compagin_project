@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+
+{% block main%}
+
+<div class="pt-4 w-100 h-100">
+
+    <!-- if no data start -->
+
+    <!-- <div class="d-flex w-100 justify-content-center align-items-center" style="height: 80vh;">
+        <div>
+            <div class="text-center">
+                <img src="https://media.istockphoto.com/id/1001237686/vector/document-with-tables-icon-vector-sign-and-symbol-isolated-on-white-background-document-with.jpg?s=612x612&w=0&k=20&c=KWxJs6gpwY1FzMuaBo0Bhi49_XcN4SwCYdFMWpn9E3k=" height="150" alt="">
+
+                <br>
+                No Data Present
+            </div>
+            <br>
+            <button class="btn btn-primary btn-lg px-5">Add Data</button>
+
+        </div>
+    </div> -->
+
+    <!-- if no data end -->
+
+
+
+
+    <!-- if data start -->
+    <div class="data">
+        <table class="table align-middle mb-0 bg-white">
+            <thead class="bg-light">
+                <tr>
+                    <th class="col-1">S.N.</th>
+                    <th class="col-3">Activity Code/Name</th>
+                    <th class="col-2">Venue</th>
+                    <th class="col-2">Community</th>
+                    <th class="col-2">Dates</th>
+                    <th class="col-2">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+
+                    <!-- continue entry data start -->
+                    <td>
+                        1
+                    </td>
+                    <td>
+                        <p class="fw-normal mb-1">1.3.1.3</p>
+                        <p class="text-muted mb-0">Consultaion Meeting with the local about how they can make
+                            life better</p>
+                    </td>
+                    <td>
+                        <p>
+                            Province: <span class="fw-bold">Bagmati</span> <br>
+                            District: <span class="fw-bold">Dolakha</span> <br>
+                            Palika: <span class="fw-bold">Jiri</span> <br>
+                            Ward: <span class="fw-bold">12</span>
+                        </p>
+                    </td>
+                    <td>
+                        <p>
+                            Terai People Community
+                        </p>
+                    </td>
+                    <td>
+                        <p>
+                            Start: <span class="fw-bold">2023-03-19</span> <br>
+                            End: <span class="fw-bold">2023-04-31</span> <br>
+                            Days: <span class="fw-bold">4</span>
+                        </p>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-warning btn-rounded">
+                            Continue Entery
+                        </button>
+                    </td>
+                </tr>
+
+                <!-- continue entry data end -->
+
+
+
+                <!-- submitted data start -->
+                <td>
+                    2
+                </td>
+                <td>
+                    <p class="fw-normal mb-1">1.3.1.3</p>
+                    <p class="text-muted mb-0">Consultaion Meeting with the local about how they can make life
+                        better</p>
+                </td>
+                <td>
+                    <p>
+                        Province: <span class="fw-bold">Bagmati</span> <br>
+                        District: <span class="fw-bold">Dolakha</span> <br>
+                        Palika: <span class="fw-bold">Jiri</span> <br>
+                        Ward: <span class="fw-bold">12</span>
+                    </p>
+                </td>
+                <td>
+                    <p>
+                        Terai People Community
+                    </p>
+                </td>
+                <td>
+                    <p>
+                        Start: <span class="fw-bold">2023-03-19</span> <br>
+                        End: <span class="fw-bold">2023-04-31</span> <br>
+                        Days: <span class="fw-bold">4</span>
+                    </p>
+                </td>
+                <td class="text-center">
+                    <div class="btn btn-lg badge badge-success px-3 btn-rounded">
+                        Submitted
+                    </div>
+                </td>
+
+                <!-- submitted data end -->
+            </tbody>
+        </table>
+    </div>
+    <!-- if data end -->
+
+</div>
+
+
+{% endblock %}
