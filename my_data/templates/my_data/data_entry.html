@@ -48,7 +48,7 @@
           <label for="province-select">Province</label>
           <select class="form-select" id="province-select" disabled>
             {% if data_entry_page %}
-            <option value="{{current_event.province}}" disabled>{{current_event.province}}</option>
+            <option value="{{current_event.province}}">{{current_event.province}}</option>
             {% else %}
             <option value="">Select a province</option>
             {% endif %}
@@ -69,10 +69,31 @@
         <div class="col-lg-3">
           <label for="ward">Ward</label>
           <input class="form-control" placeholder="Valid (1 to 35)" type="number" min="1" max="35"
-            value="{{current_event.ward}}" disabled oninput="validity.valid||(value='');" />
+            value="{{current_event.ward}}" disabled oninput="validity.valid||(value='');" required/>
         </div>
+
+
+        <div class="person-responsible col-lg-6">
+          <div class="form-group mt-3">
+            <label for="responsible">Person Responsible</label>
+            <input type="text" class="form-control" id="responsible" value="{{current_event.person_responsible}}" name="person_responsible" required  disabled/>
+          </div>
+        </div>
+
+        <div class="person-responsible col-lg-6">
+          <div class="form-group mt-3">
+            <label for="responsible">Community</label>
+            <input type="text" class="form-control" id="responsible" value="{{current_event.community}}" name="community" required  disabled/>
+          </div>
+        </div>
+
       </div>
+
+
+
+    
     </div>
+
 
     <!-- Modal TO Add Participant Start -->
     <div class="add-data container">
@@ -94,27 +115,27 @@
                     <div class="col-lg-4">
                       <div class="form-group mb-3">
                         <label for="name">Name of Participant</label>
-                        <input type="text" class="form-control" id="name" name="name"  required/>
+                        <input type="text" class="form-control" id="name" name="name" required />
                       </div>
                       <div class="form-group mb-3">
                         <label for="organization">Affiliated Organization</label>
-                        <input type="text" class="form-control" id="organization" name="affiliated_org" required/>
+                        <input type="text" class="form-control" id="organization" name="affiliated_org" required />
                       </div>
                       <div class="form-group mb-3">
                         <label for="designation">Designation</label>
-                        <input type="text" class="form-control" id="designation" name="designation" required/>
+                        <input type="text" class="form-control" id="designation" name="designation" required />
                       </div>
 
                       <div class="form-group mb-3">
                         <label for="email">Email ID</label>
-                        <input type="email" class="form-control" id="email" name="email" required/>
+                        <input type="email" class="form-control" id="email" name="email" required />
                       </div>
                     </div>
 
                     <div class="col-lg-4">
                       <div class="form-group mb-3">
                         <label for="age">Age</label>
-                        <input type="number" class="form-control" id="age" name="age" required/>
+                        <input type="number" class="form-control" id="age" name="age" required />
                       </div>
                       <div class="form-group mb-3">
                         <label for="sex">Sex</label>
@@ -129,15 +150,9 @@
                         <label for="ethnicity">Ethnicity</label>
                         <select class="form-select" id="ethnicity" name="ethnicity" required>
                           <option value="">-- Select --</option>
-                          <option value="ethnicity1">
-                            Ethnicity 1
-                          </option>
-                          <option value="ethnicity2">
-                            Ethnicity 2
-                          </option>
-                          <option value="ethnicity3">
-                            Ethnicity 3
-                          </option>
+                          {% for eth in ethnicity_choices %}
+                          <option value="{{eth.0}}">{{eth.1}}</option>
+                          {% endfor %}
                         </select>
                       </div>
                     </div>
@@ -146,28 +161,25 @@
                         <label for="pwd">Pwd Status</label>
                         <select class="form-select" id="pwd" name="pwd" required>
                           <option value="">-- Select --</option>
-                          <option value="yes">Yes</option>
-                          <option value="no">No</option>
+                          <option value="True">Yes</option>
+                          <option value="False">No</option>
                         </select>
                       </div>
                       <div class="form-group mb-3">
                         <label for="category">Participation Category</label>
-                        <select class="form-select" id="category" name="category">
+                        <select class="form-select" id="category" name="participation_category">
                           <option value="">-- Select --</option>
-                          <option value="category1">Category 1</option>
-                          <option value="category2">Category 2</option>
-                          <option value="category3">Category 3</option>
+                          {% for item in participation_category_data %}
+                          <option value="{{item}}">{{item}}</option>
+                          {% endfor %}
                         </select>
                       </div>
                       <div class="form-group mb-3">
                         <label for="contact">Contact Number</label>
-                        <input type="text" class="form-control" id="contact" name="contact" required/>
+                        <input type="text" class="form-control" id="contact" name="contact" required />
                       </div>
 
-                      <div class="form-group mb-3">
-                        <label for="responsible">Person Responsible</label>
-                        <input type="text" class="form-control" id="responsible" name="responsible" required/>
-                      </div>
+                      
                     </div>
                   </div>
                 </div>
@@ -188,46 +200,59 @@
     <!-- Modal to AdD Participant Data End -->
 
     <!-- Participant Data Table -->
-    <table class="table table-bordered align-middle mb-0 bg-white border-top mt-5 table-sm mb-5">
-      <thead class="bg-light">
-        <tr>
-          <th class="col small">S.N.</th>
-          <th class="col small">Name</th>
-          <th class="col small">Aff. Org</th>
-          <th class="col small">Designation</th>
-          <th class="col small">Email</th>
-          <th class="col small">Age</th>
-          <th class="col small">Sex</th>
-          <th class="col small">Ethnicity</th>
-          <th class="col small">PwD</th>
-          <th class="col small">Part. Category</th>
-          <th class="col small">Contact</th>
-          <th class="col small">Person Responsible</th>
-          <th class="col small">Actions</th>
+    {% if participants %}
+    <table class="table table-bordered table-striped align-middle mb-0 bg-white border-top mt-5 table-sm mb-5">
+      <thead>
+        <tr class="text-info">
+          <th class="col small fw-bold">S.N.</th>
+          <th class="col small fw-bold">Name</th>
+          <th class="col small fw-bold">Aff. Org</th>
+          <th class="col small fw-bold">Designation</th>
+          <th class="col small fw-bold">Email</th>
+          <th class="col small fw-bold">Age</th>
+          <th class="col small fw-bold">Sex</th>
+          <th class="col small fw-bold">Ethnicity</th>
+          <th class="col small fw-bold">PwD</th>
+          <th class="col small fw-bold">Part. Category</th>
+          <th class="col small fw-bold">Contact</th>
+          <th class="col small fw-bold">Actions</th>
         </tr>
       </thead>
       <tbody>
+        {% for participant in participants %}
         <tr>
-          <td class="col small">1</td>
-          <td class="col small">Achyut Subba</td>
-          <td class="col small">Retro Nepal Pvt. Ltd.</td>
-          <td class="col small">Secretary</td>
-          <td class="col small">achyut.subba@gmail.com</td>
-          <td class="col small">21</td>
-          <td class="col small">Female</td>
-          <td class="col small">Ethnicity 1</td>
-          <td class="col small">No</td>
-          <td class="col small">Teachers</td>
-          <td class="col small">9808123423</td>
-          <td class="col small">Sima Das</td>
+          <td class="col small">{{forloop.counter}}</td>
+          <td class="col small">{{participant.name}}</td>
+          <td class="col small">{{participant.affiliated_org}}</td>
+          <td class="col small">{{participant.designation}}</td>
+          <td class="col small">{{participant.email}}</td>
+          <td class="col small">{{participant.age}}</td>
+          <td class="col small">{{participant.gender}}</td>
+          <td class="col small">{{participant.ethnicity}}</td>
+          <td class="col small">{{participant.pwd}}</td>
+          <td class="col small">{{participant.participation_category.name}}</td>
+          <td class="col small">{{participant.contact}}</td>
           <td>
-            <button class="btn btn-sm btn-primary">Edit</button>
-            <button class="btn btn-sm btn-danger mt-2">Delete</button>
+            <a href="/event/participant/update/{{participant.id}}" class="btn btn-sm btn-primary">Edit</a>
+            <a href="/event/participant/delete/{{participant.id}}" class="btn btn-sm btn-danger mt-2">Delete</a>
           </td>
         </tr>
+        {% endfor %}
       </tbody>
     </table>
+    {% endif %}
     <!-- Participant Data Table End -->
+
+    {% if participants %}
+    <div class="container">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-success">
+          Save & Submit Data
+        </button>
+      </div>
+      <div class="small text-end">**Once you submit data you cannot edit or delete it.</div>
+    </div>
+    {% endif %}
   </div>
 </div>
 

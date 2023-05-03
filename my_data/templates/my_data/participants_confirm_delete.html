@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="container">
+    <h2>Confirm Delete Participants</h2>
+    <p>Are you sure you want to delete '{{ object }}'?</p>
+
+    <h2>Participant Information</h2>
+    <ul>
+      <li><strong>Event/Activity:</strong> {{ object.event.project.name }} / {{ object.event.activity.id }}</li>
+      <li><strong>Name:</strong> {{ object.name }}</li>
+      <li><strong>Affiliated Org:</strong> {{ object.affiliated_org }}</li>
+      <li><strong>Designation:</strong> {{ object.designation }}</li>
+      <li><strong>Age:</strong> {{ object.age }}</li>
+      <li><strong>Gender:</strong> {{ object.gender }}</li>
+      <li><strong>Ethnicity:</strong> {{ object.ethnicity }}</li>
+      <li><strong>PWD:</strong> {% if object.pwd %} Yes {% else %} No {% endif %}</li>
+      <li><strong>Participation Category:</strong> {{ object.participation_category }}</li>
+      <li><strong>Contact:</strong> {{ object.contact }}</li>
+      <li><strong>Email:</strong> {{ object.email }}</li>
+    </ul>
+
+
+    <form method="POST">
+        {% csrf_token %}
+        <input type="submit" class="btn btn-danger" value="Delete">
+        <a href="{% url 'participant-view' object.event.id %}" class="ms-3 btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

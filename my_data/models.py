@@ -28,20 +28,34 @@ class Event(models.Model):
     start_date  = models.DateField()
     end_date = models.DateField()
     person_responsible = models.CharField(max_length=100, blank=True)
+    submit_one = models.BooleanField(default=False)
+    submit_two = models.BooleanField(default=False)
+    submit_three = models.BooleanField(default=False)
 
-    
+
+class ParticipationCategory(models.Model):
+    name = models.CharField(max_length=99)
 
 class Participants(models.Model):
+    ETHINICITY = (
+        ("dalit","Dalit"),
+        )
+    
+    GENDER = (
+        ("male", "male"),
+        ("female", "female"),
+        ("others", "others")
+        )
+    
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="participated_event")
     name = models.CharField(max_length=100)
     affiliated_org = models.CharField(max_length=500, blank=True)
     designation = models.CharField(max_length=500, blank=True)
     age = models.IntegerField(null=True, blank=True)
-    GENDER = (("male", "male"),("female", "female"),("others", "others"))
     gender = models.CharField(max_length=500, choices=GENDER, default="male")
-    ETHINICITY = (("dalit","dalit"),)
     ethnicity = models.CharField(max_length=500, choices=ETHINICITY, blank=True)
     pwd = models.BooleanField(null=True, blank=True)
-    participation_category = models.CharField(max_length=1000, blank=True)
+    participation_category = models.ForeignKey(ParticipationCategory,on_delete=models.CASCADE)
     contact = models.IntegerField(null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
     step1_user = models.CharField(max_length=500, null=True, blank=True)
@@ -50,6 +64,10 @@ class Participants(models.Model):
     step2 = models.BooleanField(null=True, blank=True)
     step3_user = models.CharField(max_length=500, null=True, blank=True)
     step3 = models.BooleanField(null=True, blank=True)
+
+    @classmethod
+    def get_ethnicity_choices(cls):
+        return cls.ETHINICITY
 
     def __str__(self):
         return self.name

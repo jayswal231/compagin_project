@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="container">
+    <h2>Confirm Delete Event</h2>
+    <p>Are you sure you want to delete '{{ object }}'?</p>
+
+    <h2>Event Information</h2>
+    <ul>
+        <li><strong>Project:</strong> {{ object.project }}</li>
+        <li><strong>Activity:</strong> {{ object.activity }}</li>
+        <li><strong>Province:</strong> {{ object.province }}</li>
+        <li><strong>District:</strong> {{ object.district }}</li>
+        <li><strong>Palika:</strong> {{ object.palika }}</li>
+        <li><strong>Ward:</strong> {{ object.ward }}</li>
+        <li><strong>Community:</strong> {{ object.community }}</li>
+        <li><strong>Start Date:</strong> {{ object.start_date }}</li>
+        <li><strong>End Date:</strong> {{ object.end_date }}</li>
+        <li><strong>Person Responsible:</strong> {{ object.person_responsible }}</li>
+    </ul>
+
+    <form method="POST">
+        {% csrf_token %}
+        <input type="submit" class="btn btn-danger" value="Delete">
+        <a href="{% url 'event-list' %}" class="ms-3 btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

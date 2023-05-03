@@ -13,16 +13,18 @@ urlpatterns = [
     # for event
     path('event/create', EventCreateView.as_view(), name='event-create'),
     path('event/list', EventListView.as_view(), name='event-list'),
-    path('event/udpate/<int:pk>/', EventUpdateView.as_view(), name='event-update'),
-    # path('event/delete/<int:pk>/', EventDeleteView.as_view(), name='event-delete'),
+    path('event/update/<int:pk>/', EventUpdateView.as_view(), name='event-update'),
+    path('event/delete/<int:pk>/', EventDeleteView.as_view(), name='event-delete'),
 
 
     path('event/<int:id>/participant/list', participant_view, name="participant-view"),
     path('event/participant/update/<int:pk>', ParticipantEditView.as_view(), name="participant-update"),
+    path('event/participant/delete/<int:pk>', ParticipantDeleteView.as_view(), name='participants-delete'),
 
 
     path('activities/', ActivityListView.as_view(), name='activity-list'),
     path('datalist/', DataListView.as_view(), name='data-list'),
+    # path('participation/category', ParticipationCategoryList.as_view(), name="participation-category")
 
     
 ]
