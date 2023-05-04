@@ -21,20 +21,20 @@ class ProjectListView(ListView):
 class ProjectCreateView(CreateView):
     model = Project
     fields = ['code', 'name']
-    template_name = 'data_entry_list.html'
+    template_name = 'my_data/data_entry_list.html'
     success_url = reverse_lazy('project-list')
 
 
 class ProjectUpdateView(UpdateView):
     model = Project
     fields = ['code', 'name']
-    template_name = 'data_entry.html'
+    template_name = 'my_data/data_entry.html'
     success_url = reverse_lazy('project-list')
 
 
 class ProjectDeleteView(DeleteView):
     model = Project
-    template_name = 'dashboard.html'
+    template_name = 'my_data/dashboard.html'
     success_url = reverse_lazy('project-list')
 
 
@@ -116,7 +116,7 @@ class EventDeleteView(DeleteView):
 class ParticipantEditView(UpdateView):
     model = Participants
     fields = ["name", "affiliated_org", "designation", "age", "gender", "ethnicity",
-              "pwd", "participation_category", "contact", "email", "person_responsible"]
+              "pwd", "participation_category", "contact", "email"]
     template_name = "my_data/participant_form.html"
 
     def get_context_data(self, **kwargs):
