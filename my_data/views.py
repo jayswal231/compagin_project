@@ -1,3 +1,5 @@
+from typing import Any
+from django.db import models
 from .models import Activity
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -8,40 +10,108 @@ from django.shortcuts import render, redirect
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .models import *
+from django.db.models import Count
 # Create your views here.
 
 # for Project
-
 
 class ProjectListView(ListView):
     model = Project
     template_name = 'my_data/dashboard.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        districts = District.objects.all()
+        for district in districts:
+            district_event_counts = Event.objects.filter(district=district).count()
+            participate_count = 0
+            events= Event.objects.filter(district=district)
+            for event in events:
+                participate = Participants.objects.filter(event=event).count()
+                participate_count += participate
+            print(participate_count)
+            print(district_event_counts)
+
+
+        data = {
+            "ethnicity": {
+                "ETH1": {
+                    "Male": 12,
+                    "Female": 23,
+                    "Other": 12
+                },
+                "ETH2": {
+                    "Male": 12,
+                    "Female": 23,
+                    "Other": 12
+                },
+                "ETH3": {
+                    "Male": 12,
+                    "Female": 23,
+                    "Other": 12
+                }
+            }
+        }
+
+        # activity
+            # age
+            # category
+        
+        # all
+            # age
+            # category
+
+        ethnicities = {
+            "ethnicity":[]
+        }
+        e='dalit'
+        eth=Participants.objects.get(ethnicity=e)
+        for i in eth:
+            ethnicities["ethnicity"].append(i)
+        print(ethnicities)
+        
+
+        context["participate_count"] = participate_count
+        context["district_event_counts"] = district_event_counts
+
+        
+        return context
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     district_event_counts = Participants.objects.values('event__district').annotate(
+    #         event_count=Count('event', distinct=True),
+    #         participant_count=Count('id', distinct=True)
+    #     )
+    #     context['district_event_counts'] = district_event_counts
+    #     return context
 
 class ProjectCreateView(CreateView):
     model = Project
     fields = ['code', 'name']
-    template_name = 'data_entry_list.html'
+    template_name = 'my_data/data_entry_list.html'
     success_url = reverse_lazy('project-list')
 
 
 class ProjectUpdateView(UpdateView):
     model = Project
     fields = ['code', 'name']
-    template_name = 'data_entry.html'
+    template_name = 'my_data/data_entry.html'
     success_url = reverse_lazy('project-list')
 
 
 class ProjectDeleteView(DeleteView):
     model = Project
-    template_name = 'dashboard.html'
+    template_name = 'my_data/dashboard.html'
     success_url = reverse_lazy('project-list')
 
 
 # for event
+
 class EventListView(ListView):
     model = Event
     template_name = 'my_data/data_entry_list.html'
+
 
 
 class EventCreateView(CreateView):
@@ -75,6 +145,10 @@ class EventUpdateView(UpdateView):
     template_name = 'my_data/event_form.html'
     success_url = reverse_lazy('event-list')
 
+    
+
+
+
 
 def participant_view(request, id=None):
     template_name = "my_data/data_entry.html"
@@ -104,6 +178,9 @@ def participant_view(request, id=None):
 
         return redirect('participant-view', id)
 
+    
+    
+
     return render(request, template_name, context)
 
 
@@ -116,7 +193,7 @@ class EventDeleteView(DeleteView):
 class ParticipantEditView(UpdateView):
     model = Participants
     fields = ["name", "affiliated_org", "designation", "age", "gender", "ethnicity",
-              "pwd", "participation_category", "contact", "email", "person_responsible"]
+              "pwd", "participation_category", "contact", "email"]
     template_name = "my_data/participant_form.html"
 
     def get_context_data(self, **kwargs):
