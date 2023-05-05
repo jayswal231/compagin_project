@@ -26,5 +26,7 @@ urlpatterns = [
     path('datalist/', DataListView.as_view(), name='data-list'),
     # path('participation/category', ParticipationCategoryList.as_view(), name="participation-category")
 
-    
+    # category_data
+    path('list/age/ethnicity/', filter_age_and_ethnicity, name='list-age-ethnicity'),
+    path('list/category/', filter_category, name='list-category'),
 ]

@@ -11,6 +11,8 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .models import *
 from django.db.models import Count
+from django.db.models import Case, When, Value, CharField,IntegerField,F
+from django.db.models.functions import Cast 
 # Create your views here.
 
 # for Project
@@ -19,63 +21,23 @@ class ProjectListView(ListView):
     model = Project
     template_name = 'my_data/dashboard.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        districts = District.objects.all()
-        for district in districts:
-            district_event_counts = Event.objects.filter(district=district).count()
-            participate_count = 0
-            events= Event.objects.filter(district=district)
-            for event in events:
-                participate = Participants.objects.filter(event=event).count()
-                participate_count += participate
-            print(participate_count)
-            print(district_event_counts)
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     districts = District.objects.all()
+    #     for district in districts:
+    #         district_event_counts = Event.objects.filter(district=district).count()
+    #         participate_count = 0
+    #         events= Event.objects.filter(district=district)
+    #         for event in events:
+    #             participate = Participants.objects.filter(event=event).count()
+    #             participate_count += participate
+    #         print(participate_count)
+    #         print(district_event_counts)
 
+    #     context["participate_count"] = participate_count
+    #     context["district_event_counts"] = district_event_counts
 
-        data = {
-            "ethnicity": {
-                "ETH1": {
-                    "Male": 12,
-                    "Female": 23,
-                    "Other": 12
-                },
-                "ETH2": {
-                    "Male": 12,
-                    "Female": 23,
-                    "Other": 12
-                },
-                "ETH3": {
-                    "Male": 12,
-                    "Female": 23,
-                    "Other": 12
-                }
-            }
-        }
-
-        # activity
-            # age
-            # category
-        
-        # all
-            # age
-            # category
-
-        ethnicities = {
-            "ethnicity":[]
-        }
-        e='dalit'
-        eth=Participants.objects.get(ethnicity=e)
-        for i in eth:
-            ethnicities["ethnicity"].append(i)
-        print(ethnicities)
-        
-
-        context["participate_count"] = participate_count
-        context["district_event_counts"] = district_event_counts
-
-        
-        return context
+    #     return context
 
     # def get_context_data(self, **kwargs):
     #     context = super().get_context_data(**kwargs)
@@ -145,10 +107,6 @@ class EventUpdateView(UpdateView):
     template_name = 'my_data/event_form.html'
     success_url = reverse_lazy('event-list')
 
-    
-
-
-
 
 def participant_view(request, id=None):
     template_name = "my_data/data_entry.html"
@@ -177,9 +135,6 @@ def participant_view(request, id=None):
             **normal_dict, event=currentEvent, step1_user=request.user)
 
         return redirect('participant-view', id)
-
-    
-    
 
     return render(request, template_name, context)
 
@@ -252,19 +207,86 @@ class DataListView(APIView):
             result[province_name]["districts"][district_name]["palikas"].append(
                 palika_name)
 
-        # for province and  district
-        # for district in districts:
-        #     province_name = district.province.name
-        #     district_name = district.name
-        #     if province_name not in result:
-        #         result[province_name] = {}
-        #     if district_name not in result[province_name]:
-        #         result[province_name]['name']=district_name
-
-        # for province only
-        # for province in provinces:
-        #     province_name = province.name
-        #     if province_name not in result:
-        #         result['name']=province_name
-
         return Response({"provinces": result})
+    
+
+
+# filter data according to age and ethnicity
+def filter_age_and_ethnicity(request):
+    template_name = 'my_data/category_data.html'
+    activities = Activity.objects.all()
+    data = []
+    for activity in activities:
+        age_groups = [(0,5,'0-5'), (6,10,'6-10'), (11,18,'11-18'), (19,31,'19-31'), (31, None,'31-above')]
+
+        participant_age_groups = Participants.objects.filter(event__activity=activity).annotate(
+            age_group=Case(
+                *[When(
+                    age__range=(start, end),
+                    then=Value(label)
+                ) for start, end, label in age_groups],
+                output_field=CharField()
+            ),
+            age_int=Cast(F('age'), output_field=IntegerField())  # Convert age to integer
+        ).values('ethnicity', 'age_group', 'age_int', 'gender')
+
+    data = {}
+    for p in participant_age_groups:
+        if p['ethnicity'] not in data:
+            data[p['ethnicity']] = {}
+        if p['age_group'] not in data[p['ethnicity']]:
+            data[p['ethnicity']][p['age_group']] = {'male': 0, 'female': 0, 'trans_sex':0,}
+        if p['gender'] == 'male':
+            data[p['ethnicity']][p['age_group']]['male'] += 1
+        elif p['gender'] == 'female':
+            data[p['ethnicity']][p['age_group']]['female'] += 1
+        else:
+            data[p['ethnicity']][p['age_group']]['trans_sex'] += 1
+
+    age_data = [{'age': label, 'count': Participants.objects.filter(age__range=(start, end)).count()} for start, end, label in age_groups]
+
+    final_data = {'age_data': age_data, 'ethnicity_data': data}
+    # print(data)
+    print(data)
+    return render(request, template_name, {'final_data': final_data})
+
+
+
+
+# filter category and ethnicity
+def filter_category(request):
+    template_name = 'my_data/category_data.html'
+
+    categories = ParticipationCategory.objects.all()
+    data = []
+    activities=Activity.objects.all()
+    for activity in activities:
+        for category in categories:
+            category_data = {'category': category.name, 'ethnicities': {}}
+            participants = Participants.objects.filter(participation_category=category, event__activity=activity)
+            for p in participants:
+                if p.ethnicity not in category_data['ethnicities']:
+                    category_data['ethnicities'][p.ethnicity] = {'male': 0, 'female': 0, 'trans_sex':0}
+                if p.gender == 'male':
+                    category_data['ethnicities'][p.ethnicity]['male'] += 1
+                elif p.gender == 'female':
+                    category_data['ethnicities'][p.ethnicity]['female'] += 1
+                else:
+                    category_data['ethnicities'][p.ethnicity]['trans_sex'] += 1
+            data.append(category_data)
+
+    
+    for item in data:
+        current_eth =list(item["ethnicities"].keys())
+        not_present_eth_lower = [key.lower() for key in current_eth]
+        not_present_eth = [item for item in Participants.get_ethnicity_choices() if item[0] not in not_present_eth_lower]
+        
+        for eth in not_present_eth:
+            item["ethnicities"].update({eth[0]: {'male': 0, 'female': 0, 'trans_sex':0}})
+        
+            
+
+
+    context = {'data': data}
+    print(data)
+    return render(request, template_name, context)

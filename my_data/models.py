@@ -48,7 +48,7 @@ class Participants(models.Model):
     GENDER = (
         ("male", "male"),
         ("female", "female"),
-        ("others", "others")
+        ("trans_sex", "trans_sex")
         )
     
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="participated_event")

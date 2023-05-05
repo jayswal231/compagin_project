@@ -1,0 +1,58 @@
+<!-- my_data/category_data.html -->
+
+<h2>Age Data:</h2>
+<ul>
+{% for item in final_data.age_data %}
+    <li>{{ item.age }}: {{ item.count }}</li>
+{% endfor %}
+</ul>
+
+<h2>Ethnicity Data:</h2>
+{% for ethnicity, age_data in final_data.ethnicity_data.items %}
+    <h3>{{ ethnicity }}</h3>
+    <table>
+    <thead>
+        <tr>
+            <th>Age Group</th>
+            <th>Male</th>
+            <th>Female</th>
+            <th>Trans sex</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for age_group, gender_data in age_data.items %}
+        <tr>
+            <td>{{ age_group }}</td>
+            <td>{{ gender_data.male }}</td>
+            <th>{{gender_data.female}}</th>
+            <td>{{ gender_data.trans_sex }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+{% endfor %}
+
+
+
+
+
+
+<h1>start to category-filter</h1>
+
+<ul>
+    {% for category in data %}
+        <li>{{ category.category }}</li>
+        <ul>
+        {% for ethnicity, gender_counts in category.ethnicities.items %}
+            <li>{{ ethnicity }}</li>
+            <ul>
+            {% for gender, count in gender_counts.items %}
+                <li>{{ gender }}: {{ count }}</li>
+            {% endfor %}
+            </ul>
+        {% endfor %}
+        </ul>
+    {% endfor %}
+    </ul>
+    
+    
