@@ -24,10 +24,15 @@ urlpatterns = [
 
     path('activities/', ActivityListView.as_view(), name='activity-list'),
     path('datalist/', DataListView.as_view(), name='data-list'),
+    path('api/age/ethnicity/datalist/', AgeEthnicityDataList.as_view(), name='age-ethnicity-datalist'),
+    path('api/category/ethnicity/datalist/', CategoryEthnicityDataList.as_view(), name='category-ethnicity-datalist'),
+
     # path('participation/category', ParticipationCategoryList.as_view(), name="participation-category")
 
     # category_data
     path('list/age/ethnicity/', filter_age_and_ethnicity, name='list-age-ethnicity'),
     path('list/category/', filter_category, name='list-category'),
     path('data/visualize/', visualization_page, name='visualization-page'),
+
+    
 ]

@@ -1,11 +1,13 @@
 from typing import Any
 from django.db import models
+
+from my_data.utlis import *
 from .models import Activity
 from rest_framework.response import Response
 from rest_framework.views import APIView
 import json
 from django.forms.models import BaseModelForm
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
@@ -188,8 +190,14 @@ class ActivityListView(APIView):
 
 # for province, district , palika api
 class DataListView(APIView):
+    
     def get(self, request):
-        palikas = Palika.objects.all()
+        if request.GET.get('palika_id') == "all" or request.GET.get('palika_id') is None:
+            palikas = Palika.objects.all()
+        else:
+            palikas = Palika.objects.filter(id=request.GET.get('palika_id'))
+
+        # palikas = Palika.objects.all()
         districts = District.objects.all()
         provinces = Province.objects.all()
         result = {}
@@ -211,44 +219,18 @@ class DataListView(APIView):
     
 
 
-# filter data according to age and ethnicity
+# filter age and ethnicity
 def filter_age_and_ethnicity(request):
     template_name = 'my_data/category_data.html'
-    activities = Activity.objects.all()
-    data = []
-    for activity in activities:
-        age_groups = [(0,5,'0-5'), (6,10,'6-10'), (11,18,'11-18'), (19,31,'19-31'), (31, None,'31-above')]
+    
+    if request.GET.get('activity_id') != "all" or request.GET.get('activity_id') is not None:
+        activities = Activity.objects.filter(id=request.GET.get('activity_id'))
+    else:
+        activities = Activity.objects.all()
 
-        participant_age_groups = Participants.objects.filter(event__activity=activity).annotate(
-            age_group=Case(
-                *[When(
-                    age__range=(start, end),
-                    then=Value(label)
-                ) for start, end, label in age_groups],
-                output_field=CharField()
-            ),
-            age_int=Cast(F('age'), output_field=IntegerField())  # Convert age to integer
-        ).values('ethnicity', 'age_group', 'age_int', 'gender')
-
-    data = {}
-    for p in participant_age_groups:
-        if p['ethnicity'] not in data:
-            data[p['ethnicity']] = {}
-        if p['age_group'] not in data[p['ethnicity']]:
-            data[p['ethnicity']][p['age_group']] = {'male': 0, 'female': 0, 'trans_sex':0,}
-        if p['gender'] == 'male':
-            data[p['ethnicity']][p['age_group']]['male'] += 1
-        elif p['gender'] == 'female':
-            data[p['ethnicity']][p['age_group']]['female'] += 1
-        else:
-            data[p['ethnicity']][p['age_group']]['trans_sex'] += 1
-
-    age_data = [{'age': label, 'count': Participants.objects.filter(age__range=(start, end)).count()} for start, end, label in age_groups]
-
-    final_data = {'age_data': age_data, 'ethnicity_data': data}
-    # print(data)
-    print(data)
+    final_data = generate_ethnicity_based_data(activities)        
     return render(request, template_name, {'final_data': final_data})
+
 
 
 
@@ -256,36 +238,12 @@ def filter_age_and_ethnicity(request):
 def filter_category(request):
     template_name = 'my_data/category_data.html'
 
-    categories = ParticipationCategory.objects.all()
-    data = []
-    activities=Activity.objects.all()
-    for activity in activities:
-        for category in categories:
-            category_data = {'category': category.name, 'ethnicities': {}}
-            participants = Participants.objects.filter(participation_category=category, event__activity=activity)
-            for p in participants:
-                if p.ethnicity not in category_data['ethnicities']:
-                    category_data['ethnicities'][p.ethnicity] = {'male': 0, 'female': 0, 'trans_sex':0}
-                if p.gender == 'male':
-                    category_data['ethnicities'][p.ethnicity]['male'] += 1
-                elif p.gender == 'female':
-                    category_data['ethnicities'][p.ethnicity]['female'] += 1
-                else:
-                    category_data['ethnicities'][p.ethnicity]['trans_sex'] += 1
-            data.append(category_data)
+    if request.GET.get('activity_id') == "all" or request.GET.get('activity_id') is None:
+        activities = Activity.objects.all()
+    else:
+        activities = Activity.objects.filter(id=request.GET.get('activity_id'))
 
-    
-    for item in data:
-        current_eth =list(item["ethnicities"].keys())
-        not_present_eth_lower = [key.lower() for key in current_eth]
-        not_present_eth = [item for item in Participants.get_ethnicity_choices() if item[0] not in not_present_eth_lower]
-        
-        for eth in not_present_eth:
-            item["ethnicities"].update({eth[0]: {'male': 0, 'female': 0, 'trans_sex':0}})
-        
-            
-
-
+    data = generate_category_based_data(activities)      
     context = {'data': data}
     print(data)
     return render(request, template_name, context)
@@ -294,3 +252,35 @@ def filter_category(request):
 def visualization_page(request):
     template_name = "my_data/visualization.html"
     return render(request, template_name)
+
+
+
+# api for age ethnicity datalist
+class AgeEthnicityDataList(APIView):
+    def get(self,request):
+        if request.GET.get('activity_id') == "all" or request.GET.get('activity_id') is  None:
+            activities = Activity.objects.all()
+            
+        else:
+            activities = Activity.objects.filter(id=request.GET.get('activity_id'))
+
+        data=generate_ethnicity_based_data(activities)
+        context = {'data':data}
+        return Response(context)
+    
+
+# api for category ethinicity datalist
+class CategoryEthnicityDataList(APIView):
+
+    def get(self, request):
+        if request.GET.get('activity_id') == "all" or request.GET.get('activity_id') is None:
+            activities = Activity.objects.all()
+        else:
+            activities = Activity.objects.filter(id=request.GET.get('activity_id'))
+
+        data = generate_category_based_data(activities)      
+        context = {'data': data}
+        print(data)
+        return Response(context)
+
+
