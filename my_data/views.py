@@ -252,7 +252,6 @@ def filter_age_and_ethnicity(request):
 
 
 
-
 # filter category and ethnicity
 def filter_category(request):
     template_name = 'my_data/category_data.html'
@@ -290,3 +289,8 @@ def filter_category(request):
     context = {'data': data}
     print(data)
     return render(request, template_name, context)
+
+
+def visualization_page(request):
+    template_name = "my_data/visualization.html"
+    return render(request, template_name)

@@ -29,4 +29,5 @@ urlpatterns = [
     # category_data
     path('list/age/ethnicity/', filter_age_and_ethnicity, name='list-age-ethnicity'),
     path('list/category/', filter_category, name='list-category'),
+    path('data/visualize/', visualization_page, name='visualization-page'),
 ]

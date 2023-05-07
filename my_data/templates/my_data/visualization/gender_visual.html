@@ -1,0 +1,32 @@
+
+  <canvas id="myChartGender"></canvas>
+  <script>
+    var ctx = document.getElementById("myChartGender").getContext("2d");
+    var myChart = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: ["Male", "Female", "Trans_sex"],
+        datasets: [
+          {
+            label: "Number of Participants",
+            data: [100, 200, 300],
+            backgroundColor: ["red", "blue", "green"]
+          }
+        ]
+      },
+      options: {
+        title: {
+          text: "Bar Chart"
+        },
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true
+              }
+            }
+          ]
+        }
+      }
+    });
+  </script>
