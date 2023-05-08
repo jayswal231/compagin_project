@@ -41,11 +41,17 @@ def generate_ethnicity_based_data(activities):
             else:
                 data[p['ethnicity']][p['age_group']]['trans_sex'] += 1
         
+
+        ethnicities = dict(Participants.ETHINICITY)
+        for ethnicity in ethnicities:
+            if ethnicity not in data:
+                data[ethnicity] = {}
         # loop over all age groups, and add them to the data with count=0 if they don't already exist
-        for start, end, label in age_groups:
-            for ethnicity in data:
-                if label not in data[ethnicity]:
-                    data[ethnicity][label] = {'male': 0, 'female': 0, 'trans_sex': 0}
+            for start, end, label in age_groups:
+                for ethnicity in data:
+                    if label not in data[ethnicity]:
+                        data[ethnicity][label] = {'male': 0, 'female': 0, 'trans_sex': 0}
+                   
 
         sorted_ethnicity_data = {}
         for ethnicity, age_data in data.items():
