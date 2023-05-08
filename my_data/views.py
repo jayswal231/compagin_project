@@ -144,9 +144,21 @@ def participant_view(request, id=None):
         
 
         if "save_submit" in request.POST:
-            print("reached here")
+            if "save_submit" in request.POST:
+            # Assign values to normal_dict before using it
+                normal_dict = {key: value for key, value in request.POST.items()}
+                normal_dict.pop("csrfmiddlewaretoken")
+                normal_dict.pop('save_submit')
+                events = Event.objects.get(id=id)
+                events.submit_one = True
+                name= events.person_responsible
+                print(name)
+                events.save()
 
+               
     return render(request, template_name, context)
+
+
 
 
 class EventDeleteView(DeleteView):
