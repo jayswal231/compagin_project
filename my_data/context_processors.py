@@ -1,4 +1,4 @@
-from my_data.models import Participants, ParticipationCategory
+from my_data.models import Activity, Participants, ParticipationCategory
 
 
 def my_context_processor(request):
@@ -11,4 +11,6 @@ def my_context_processor(request):
     ethnicities = Participants.get_ethnicity_choices()  
     categories = ParticipationCategory.objects.all()
 
-    return {"current_roles": roles, 'ethnicities': ethnicities, "categories": categories}
+    all_activities_data = Activity.objects.all()
+
+    return {"current_roles": roles, 'ethnicities': ethnicities, "categories": categories, "activities_list": all_activities_data}

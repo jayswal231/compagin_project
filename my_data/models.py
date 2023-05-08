@@ -41,8 +41,8 @@ class ParticipationCategory(models.Model):
 
 class Participants(models.Model):
     ETHINICITY = (
-        ("dalit","Dalit"),
         ("janajatti","Janajatti"),
+        ("dalit","Dalit"),
         ("muslim","Muslim"),
         ("brahmin/kshetri","Brahmin/Kshetri"),
         ("others","Others")

@@ -221,7 +221,7 @@ class DataListView(APIView):
 
 # filter age and ethnicity
 def filter_age_and_ethnicity(request):
-    template_name = 'my_data/category_data.html'
+    template_name = 'my_data/age_group_data.html'
     
     if request.GET.get('activity_id') != "all" or request.GET.get('activity_id') is not None:
         activities = Activity.objects.filter(id=request.GET.get('activity_id'))

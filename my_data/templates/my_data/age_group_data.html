@@ -1,0 +1,43 @@
+<!-- my_data/age_group_data.html -->
+
+{% extends 'base.html'%}
+
+{% block main %}
+
+<table class="table table-striped table-bordered table-sm">
+    <thead>
+        <tr>
+            <th rowspan="2" class="col">Age Group</th>
+            {% for ethnicity in ethnicities %}
+            <th colspan="3" class="col">{{ethnicity.1}}</th>
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for ethnicity in ethnicities %}
+            <th>Male</th>
+            <th>Female</th>
+            <th>Others</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for age_group, data in final_data.items %}
+        <tr>
+            <td>{{age_group}}</td>
+            {% for item, gender_data in data.items %}
+            <td>{{gender_data.male}}{{item}}</td>
+            <td>{{gender_data.female}}</td>
+            <td>{{gender_data.trans_sex}}</td>
+            {%endfor %}
+
+        </tr>
+        {% endfor %}
+
+
+    </tbody>
+</table>
+</div>
+
+
+
+{% endblock %}
