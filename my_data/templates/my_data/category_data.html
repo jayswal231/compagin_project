@@ -1,16 +1,22 @@
 <!-- my_data/category_data.html -->
 
-<h2>Age Data:</h2>
+{% extends 'base.html'%}
+
+
+{% block main %}
+
+
+
+
 <ul>
-{% for item in final_data.age_data %}
+    {% for item in final_data.age_data %}
     <li>{{ item.age }}: {{ item.count }}</li>
-{% endfor %}
+    {% endfor %}
 </ul>
 
-<h2>Ethnicity Data:</h2>
 {% for ethnicity, age_data in final_data.ethnicity_data.items %}
-    <h3>{{ ethnicity }}</h3>
-    <table>
+<h3>{{ ethnicity }}</h3>
+<table>
     <thead>
         <tr>
             <th>Age Group</th>
@@ -21,39 +27,115 @@
     </thead>
     <tbody>
 
-    {% for age_group, gender_data in age_data.items %}
+        {% for age_group, gender_data in age_data.items %}
         <tr>
             <td>{{ age_group }}</td>
             <td>{{ gender_data.male }}</td>
             <th>{{gender_data.female}}</th>
             <td>{{ gender_data.trans_sex }}</td>
         </tr>
-    {% endfor %}
+        {% endfor %}
     </tbody>
-    </table>
+</table>
 {% endfor %}
 
 
 
 
+<div>
+
+    
 
 
-<h1>start to category-filter</h1>
+    <table class="table table-striped table-bordered table-sm">
+        <thead>
+            <tr>
+                <th rowspan="2" class="col">Category</th>
+                {% for ethnicity in ethnicities %}
+                <th colspan="3" class="col">{{ethnicity.1}}</th>
+                {% endfor %}
+            </tr>
+            <tr>
+                {% for ethnicity in ethnicities %}
+                <th>Male</th>
+                <th>Female</th>
+                <th>Others</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
 
-<ul>
-    {% for category in data %}
-        <li>{{ category.category }}</li>
-        <ul>
-        {% for ethnicity, gender_counts in category.ethnicities.items %}
-            <li>{{ ethnicity }}</li>
-            <ul>
-            {% for gender, count in gender_counts.items %}
-                <li>{{ gender }}: {{ count }}</li>
+
+            {% if data %}
+
+            {% for category in data %}
+            <tr>
+                <td class="col">{{category.category}}</td>
+                {% for ethnicity, gender_counts in category.ethnicities.items %}
+                {% for gender, count in gender_counts.items %}
+                <td class="col">{{count}}</td>
+                {% endfor %}
+                {% endfor %}
+            </tr>
             {% endfor %}
-            </ul>
-        {% endfor %}
-        </ul>
-    {% endfor %}
-    </ul>
-    
-    
+
+            {% else %}
+        
+
+            {% for category in categories %}
+            <tr>
+                <td class="col">{{category}}</td>
+                {% for ethnicity in ethnicities %}
+                <td class="col">0</td>
+                <td class="col">0</td>
+                <td class="col">0</td>
+                {% endfor%}
+
+            </tr>
+            {% endfor %}
+
+            {% endif %}
+            
+        </tbody>
+    </table>
+
+
+
+
+    <table class="table table-striped table-bordered table-sm">
+        <thead>
+            <tr>
+                <th rowspan="2" class="col">Age Group</th>
+                {% for ethnicity in ethnicities %}
+                <th colspan="3" class="col">{{ethnicity.1}}</th>
+                {% endfor %}
+            </tr>
+            <tr>
+                {% for ethnicity in ethnicities %}
+                <th>Male</th>
+                <th>Female</th>
+                <th>Others</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for age_group, data in final_data.items %}
+            <tr>
+                {% for item in data %}
+                {{item}}
+                <td>{{age_group}}</td>
+                <td>{{ gender_data.male }}</td>
+                <th>{{gender_data.female}}</th>
+                <td>{{ gender_data.trans_sex }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+            
+        
+        </tbody>
+    </table>
+</div>
+</div>
+
+
+{% endblock %}

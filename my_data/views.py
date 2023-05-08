@@ -228,8 +228,26 @@ def filter_age_and_ethnicity(request):
     else:
         activities = Activity.objects.all()
 
-    final_data = generate_ethnicity_based_data(activities)        
-    return render(request, template_name, {'final_data': final_data})
+    final_data = generate_ethnicity_based_data(activities)
+
+    ethnicities = list(final_data['ethnicity_data'].keys())
+    age_groups = [age_group['age'] for age_group in final_data['age_data']]
+    transposed_data = {}
+
+    for age_group in age_groups:
+        age_data = {}
+        for ethnicity in ethnicities:
+            age_data[ethnicity] = {
+                'male': final_data['ethnicity_data'][ethnicity][age_group]['male'],
+                'female': final_data['ethnicity_data'][ethnicity][age_group]['female'],
+                'trans_sex': final_data['ethnicity_data'][ethnicity][age_group]['trans_sex']
+            }
+        transposed_data[age_group] = age_data
+
+    print(transposed_data)
+
+  
+    return render(request, template_name, {'final_data': transposed_data})
 
 
 
@@ -243,7 +261,8 @@ def filter_category(request):
     else:
         activities = Activity.objects.filter(id=request.GET.get('activity_id'))
 
-    data = generate_category_based_data(activities)      
+    data = generate_category_based_data(activities)    
+    
     context = {'data': data}
     print(data)
     return render(request, template_name, context)

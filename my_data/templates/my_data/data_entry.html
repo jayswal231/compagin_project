@@ -233,8 +233,12 @@
           <td class="col small">{{participant.participation_category.name}}</td>
           <td class="col small">{{participant.contact}}</td>
           <td>
+            {% if not current_event.submitted_one %}
+            {% if "Role A" in current_roles %}
             <a href="/event/participant/update/{{participant.id}}" class="btn btn-sm btn-primary">Edit</a>
             <a href="/event/participant/delete/{{participant.id}}" class="btn btn-sm btn-danger mt-2">Delete</a>
+            {% endif %}
+            {% endif %}
           </td>
         </tr>
         {% endfor %}
