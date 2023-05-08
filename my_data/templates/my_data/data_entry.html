@@ -188,9 +188,7 @@
                 <button type="button" class="btn btn-danger" data-mdb-dismiss="modal">
                   Close
                 </button>
-                <button type="submit" class="btn btn-primary">
-                  Upload Data
-                </button>
+                <input type="submit" class="btn btn-primary" name="participant_submit" vlaue="Upload Data">
               </div>
             </form>
           </div>
@@ -248,14 +246,15 @@
     <!-- Participant Data Table End -->
 
     {% if participants %}
+    <form method="POST">
+      {% csrf_token %}
     <div class="container">
       <div class="d-flex justify-content-end">
-        <button class="btn btn-success">
-          Save & Submit Data
-        </button>
+        <input type="submit" class="btn btn-success" value="Save & Submit Data" name="save_submit">
       </div>
       <div class="small text-end">**Once you submit data you cannot edit or delete it.</div>
     </div>
+  </form>
     {% endif %}
   </div>
 </div>

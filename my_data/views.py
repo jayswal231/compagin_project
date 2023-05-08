@@ -125,18 +125,26 @@ def participant_view(request, id=None):
 
     # using the form submission to create the participant data
     if request.method == "POST":
-        query_dict = request.POST.copy()
-        normal_dict = {key: value for key, value in query_dict.items()}
-        normal_dict.pop("csrfmiddlewaretoken")
+        print(request.POST)
 
-        participation_category_data = normal_dict["participation_category"]
-        current_category = ParticipationCategory.objects.get(
-            name=participation_category_data)
-        normal_dict["participation_category"] = current_category
-        Participants.objects.create(
-            **normal_dict, event=currentEvent, step1_user=request.user)
+        if "participant_submit" in request.POST:
+            query_dict = request.POST.copy()
+            normal_dict = {key: value for key, value in query_dict.items()}
+            normal_dict.pop("csrfmiddlewaretoken")
+            normal_dict.pop('participant_submit')
 
-        return redirect('participant-view', id)
+            participation_category_data = normal_dict["participation_category"]
+            current_category = ParticipationCategory.objects.get(
+                name=participation_category_data)
+            normal_dict["participation_category"] = current_category
+            Participants.objects.create(
+                **normal_dict, event=currentEvent, step1_user=request.user)
+
+            return redirect('participant-view', id)
+        
+
+        if "save_submit" in request.POST:
+            print("reached here")
 
     return render(request, template_name, context)
 
