@@ -1,5 +1,6 @@
 from typing import Any
 from django.db import models
+from django.db.models.query import QuerySet
 from my_data.context_processors import my_context_processor
 
 from my_data.utlis import *
@@ -136,6 +137,13 @@ class EventListView(ListView):
     model = Event
     template_name = 'my_data/data_entry_list.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        for event in context['object_list']:
+            days = (event.end_date - event.start_date).days
+            event.days = days
+        return context
+    
 
 
 class EventCreateView(CreateView):
