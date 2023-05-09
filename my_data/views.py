@@ -443,3 +443,23 @@ class CategoryEthnicityDataList(APIView):
         return Response(context)
 
 
+# api for project select
+class ProjectActivityListView(APIView):
+
+    def get(self,request):
+        projects = Project.objects.all()
+        data = []
+        for project in projects:
+            activities = Activity.objects.filter(project=project)
+            activities_data = []
+            for activity in activities:
+                activities_data.append({
+                    "id":activity.id,
+                    "name":activity.name,
+                    "code":activity.code
+                })
+            data.append({
+                "project name": project.name,
+                "activity_name": activities_data
+            })
+        return Response(data)

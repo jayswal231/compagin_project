@@ -11,6 +11,8 @@ urlpatterns = [
     path('user/list/', UserList.as_view(), name="user-list"),
 
     # for project/
+    
+    path('project/activities/', ProjectActivityListView.as_view(), name='project-activity-list'),
     path('list/', ProjectListView.as_view(), name='project-list'),
     path('create/project/', ProjectCreateView.as_view(), name='project-create'),
     path('update/<int:pk>/', ProjectUpdateView.as_view(), name='project-update'),
