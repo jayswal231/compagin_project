@@ -58,15 +58,27 @@
                         </p>
                     </td>
                     <td>
-                        <a href="/event/{{event.id}}/participant/list" type="button" class="btn mb-2 btn-warning btn-sm small btn-rounded">
-                            Continue Entery
-                        </a> <br>
-                        <a href="/event/update/{{event.id}}" type="button" class="btn btn-info btn-sm small btn-rounded">
-                            Edit
+                        {% if 'Role A' in current_roles and not event.submit_one %}
+                        <!-- Role A User Controls -->
+                        {% include 'my_data/elements/event_controls.html' %}
+                        {%else%}
+
+                        {% if 'Role B' in current_roles and not event.submit_two %}
+                        <!-- Role B User Controls -->
+                        {% include 'my_data/elements/event_controls.html' %}
+                        {%else%}
+
+                        {% if 'Role C' in current_roles and not event.submit_three %}
+                        <!-- Role C User Controls -->
+                        {% include 'my_data/elements/event_controls.html' %}
+                        {%else%}
+                        <a href="/event/{{event.id}}/participant/list" type="button"
+                            class="btn mb-2 btn-primary btn-sm small btn-rounded">
+                            View
                         </a>
-                        <a href="/event/delete/{{event.id}}" type="button" class="btn btn-danger btn-sm small btn-rounded">
-                            Delete
-                        </a>
+                        {%endif%}
+                        {%endif%}
+                        {%endif%}
                     </td>
                 </tr>
 
@@ -74,11 +86,11 @@
 
 
 
-              
+
             </tbody>
         </table>
     </div>
-    
+
     <!-- if data end -->
 
     {% else %}
@@ -87,7 +99,8 @@
     <div class="d-flex w-100 justify-content-center align-items-center" style="height: 80vh;">
         <div>
             <div class="text-center">
-                <img src="https://media.istockphoto.com/id/1001237686/vector/document-with-tables-icon-vector-sign-and-symbol-isolated-on-white-background-document-with.jpg?s=612x612&w=0&k=20&c=KWxJs6gpwY1FzMuaBo0Bhi49_XcN4SwCYdFMWpn9E3k=" height="150" alt="">
+                <img src="https://media.istockphoto.com/id/1001237686/vector/document-with-tables-icon-vector-sign-and-symbol-isolated-on-white-background-document-with.jpg?s=612x612&w=0&k=20&c=KWxJs6gpwY1FzMuaBo0Bhi49_XcN4SwCYdFMWpn9E3k="
+                    height="150" alt="">
 
                 <br>
                 No Data Present

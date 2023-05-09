@@ -1,9 +1,18 @@
 from django.urls import path
 from .views import *
 urlpatterns = [
-    # for project
+
+    # homepage
+    path('', home, name="homepage"),
+    path('login/', login_view, name="login"),
+    path('logout', logout_view, name="logout"),
+
+    path('user/create/', create_user, name="create-user"),
+    path('user/list/', UserList.as_view(), name="user-list"),
+
+    # for project/
     path('list/', ProjectListView.as_view(), name='project-list'),
-    path('create/', ProjectCreateView.as_view(), name='project-create'),
+    path('create/project/', ProjectCreateView.as_view(), name='project-create'),
     path('update/<int:pk>/', ProjectUpdateView.as_view(), name='project-update'),
     path('delete/<int:pk>/', ProjectDeleteView.as_view(), name='project-delete'),
 

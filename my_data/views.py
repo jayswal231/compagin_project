@@ -1,5 +1,6 @@
 from typing import Any
 from django.db import models
+from my_data.context_processors import my_context_processor
 
 from my_data.utlis import *
 from .models import Activity
@@ -14,41 +15,100 @@ from django.urls import reverse_lazy
 from .models import *
 from django.db.models import Count
 from django.db.models import Case, When, Value, CharField,IntegerField,F
-from django.db.models.functions import Cast 
+from django.db.models.functions import Cast
+from django.contrib.auth import authenticate, login 
+from django.contrib.auth import logout
+
+from django.contrib.auth.models import User, Group
+
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.mixins import UserPassesTestMixin
 # Create your views here.
 
-# for Project
+
+def home(request):
+    template_name = "index.html"
+    return render(request, template_name)
+
+def login_view(request):
+    template_name = "login.html"
+    context = {}
+
+    if request.method == "POST":
+        username = request.POST["username"]
+        password = request.POST["password"]
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            print(user)
+            login(request, user)
+            return redirect('event-list')
+        else:
+            context["error"] = "Invalid Username or Password"
+            
+    return render(request, template_name, context)
+
+def logout_view(request):
+    logout(request)
+    return redirect('homepage')
+
+@user_passes_test(lambda u: u.is_superuser)
+def create_user(request):
+    template_name = "my_data/role_form.html"
+    context = {}
+    
+    if request.method == "POST":
+        username = request.POST["username"]
+        password = request.POST["password"]
+        role = request.POST["role"]
+        first_name = request.POST["first_name"]
+        last_name = request.POST["last_name"]
+
+        phone = request.POST["phone"]
+        address = request.POST["address"]
+
+        print(role)
+        try:
+            my_group = Group.objects.get(name=role)
+            my_user = User.objects.create_user(
+                username=username,
+                email=username,
+                password=password,
+                first_name=first_name,
+                last_name=last_name
+            )
+
+            my_user.groups.add(my_group)
+            context["message"] = "User Successfully Created"
+        except:
+            context["error"] = "Error Creating User"
+
+        return redirect('user-list')
+
+
+    return render(request, template_name)
+
+class UserList(UserPassesTestMixin, ListView):
+    model = User
+    template_name ='my_data/user_list.html'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation to get the default context data
+        context = super().get_context_data(**kwargs)
+        
+        # Add additional context data
+        profile_data = UserProfile.objects.filter(user__in=self.object_list)
+        context['profile'] = profile_data
+        
+        return context
+
+    def test_func(self):
+        return self.request.user.is_superuser
+
 
 class ProjectListView(ListView):
     model = Project
     template_name = 'my_data/dashboard.html'
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     districts = District.objects.all()
-    #     for district in districts:
-    #         district_event_counts = Event.objects.filter(district=district).count()
-    #         participate_count = 0
-    #         events= Event.objects.filter(district=district)
-    #         for event in events:
-    #             participate = Participants.objects.filter(event=event).count()
-    #             participate_count += participate
-    #         print(participate_count)
-    #         print(district_event_counts)
-
-    #     context["participate_count"] = participate_count
-    #     context["district_event_counts"] = district_event_counts
-
-    #     return context
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     district_event_counts = Participants.objects.values('event__district').annotate(
-    #         event_count=Count('event', distinct=True),
-    #         participant_count=Count('id', distinct=True)
-    #     )
-    #     context['district_event_counts'] = district_event_counts
-    #     return context
 
 class ProjectCreateView(CreateView):
     model = Project
@@ -118,6 +178,21 @@ def participant_view(request, id=None):
     context["current_event"] = currentEvent
     context["data_entry_page"] = True
 
+    if currentEvent.submit_one:
+        context["role_a_submitted"] = True
+    else:
+        context["role_a_submitted"] = False
+    
+    if currentEvent.submit_two:
+        context["role_b_submitted"] = True
+    else:
+        context["role_a_submitted"] = False
+
+    if currentEvent.submit_three:
+        context["role_c_submitted"] = True
+    else:
+        context["role_a_submitted"] = False
+
     context["ethnicity_choices"] = Participants.get_ethnicity_choices()
     context["participants"] = Participants.objects.filter(event=currentEvent)
     context['participation_category_data'] = [
@@ -145,15 +220,59 @@ def participant_view(request, id=None):
 
         if "save_submit" in request.POST:
             if "save_submit" in request.POST:
-            # Assign values to normal_dict before using it
-                normal_dict = {key: value for key, value in request.POST.items()}
-                normal_dict.pop("csrfmiddlewaretoken")
-                normal_dict.pop('save_submit')
-                events = Event.objects.get(id=id)
-                events.submit_one = True
-                name= events.person_responsible
-                print(name)
-                events.save()
+                roles_data = my_context_processor(request)
+                roles = roles_data["current_roles"]
+            
+                if 'Role A' in roles:
+                    
+                    # Assign values to normal_dict before using it
+                    normal_dict = {key: value for key, value in request.POST.items()}
+                    normal_dict.pop("csrfmiddlewaretoken")
+                    normal_dict.pop('save_submit')
+                    events = Event.objects.get(id=id)
+                    events.submit_one = True
+                    events.save()
+
+                    # get all the data of the participants and then set the setp 1
+                    all_participants = Participants.objects.filter(event=events)
+                    all_participants.update(step1=True)
+
+                    return redirect('participant-view', events.id)
+                
+                if 'Role B' in roles:
+                    
+                    # Assign values to normal_dict before using it
+                    normal_dict = {key: value for key, value in request.POST.items()}
+                    normal_dict.pop("csrfmiddlewaretoken")
+                    normal_dict.pop('save_submit')
+                    events = Event.objects.get(id=id)
+                    events.submit_two = True
+                    events.save()
+
+                    # get all the data of the participants and then set the setp 1
+                    all_participants = Participants.objects.filter(event=events)
+                    all_participants.update(step2=True, step2_user=request.user)
+
+                    return redirect('participant-view', events.id)
+                
+                if 'Role C' in roles:
+                    
+                    # Assign values to normal_dict before using it
+                    normal_dict = {key: value for key, value in request.POST.items()}
+                    normal_dict.pop("csrfmiddlewaretoken")
+                    normal_dict.pop('save_submit')
+                    events = Event.objects.get(id=id)
+                    events.submit_three = True
+                    events.save()
+
+                    # get all the data of the participants and then set the setp 1
+                    all_participants = Participants.objects.filter(event=events)
+                    all_participants.update(step3=True, step3_user=request.user)
+
+                    return redirect('participant-view', events.id)
+                
+            event = Event.objects.get(id=id)
+            return redirect('participant-view', event.id)
 
                
     return render(request, template_name, context)
@@ -191,13 +310,6 @@ class ParticipantDeleteView(DeleteView):
         return reverse_lazy('participant-view', kwargs={'id': self.object.event.id})
 
 
-# for activity api
-
-# class ParticipationCategoryList(APIView):
-#     def get(self, request):
-#         queryset = ParticipationCategory.objects.all()
-#         data = [obj.name for obj in queryset]
-#         return Response(data)
 
 
 class ActivityListView(APIView):

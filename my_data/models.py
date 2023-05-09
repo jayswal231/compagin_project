@@ -1,6 +1,16 @@
 from django.db import models
 
+from django.contrib.auth.models import User
+
 # Create your models here.
+
+
+class UserProfile(models.Model):
+    user = models.ForeignKey(User, related_name="profile", on_delete=models.CASCADE)
+    phone = models.CharField(max_length=14, null=True, blank=True)
+    address = models.CharField(max_length=99, null=True, blank=True)
+
+
 class Project(models.Model):
     code = models.CharField(max_length=500, null=True, blank=True)
     name = models.CharField(max_length=500)
@@ -65,12 +75,12 @@ class Participants(models.Model):
     participation_category = models.ForeignKey(ParticipationCategory,on_delete=models.CASCADE)
     contact = models.IntegerField(null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
-    step1_user = models.CharField(max_length=500, null=True, blank=True)
-    step1 = models.BooleanField(null=True,blank=True)
-    step2_user = models.CharField(max_length=500, null=True, blank=True)
-    step2 = models.BooleanField(null=True, blank=True)
-    step3_user = models.CharField(max_length=500, null=True, blank=True)
-    step3 = models.BooleanField(null=True, blank=True)
+    step1_user = models.ForeignKey(User, related_name="role_a", null=True, blank=True, on_delete=models.DO_NOTHING)
+    step1 = models.BooleanField(default=False)
+    step2_user = models.ForeignKey(User, related_name="role_b", null=True, blank=True, on_delete=models.DO_NOTHING)
+    step2 = models.BooleanField(default=False)
+    step3_user = models.ForeignKey(User, related_name="role_c", null=True, blank=True, on_delete=models.DO_NOTHING)
+    step3 = models.BooleanField(default=False)
 
     @classmethod
     def get_ethnicity_choices(cls):

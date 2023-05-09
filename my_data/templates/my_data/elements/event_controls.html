@@ -1,0 +1,15 @@
+{% if 'Role A' in current_roles and not current_event.submit_one %}
+<a href="/event/{{event.id}}/participant/list" type="button" class="btn mb-2 btn-warning btn-sm small btn-rounded">
+    Continue Entry
+</a> <br>
+<a href="/event/update/{{event.id}}" type="button" class="btn btn-info btn-sm small btn-rounded">
+    Edit
+</a>
+<a href="/event/delete/{{event.id}}" type="button" class="btn btn-danger btn-sm small btn-rounded">
+    Delete
+</a>
+{%else%}
+<a href="/event/{{event.id}}/participant/list" type="button" class="btn mb-2 btn-warning btn-sm small btn-rounded">
+    Review Entries
+</a>
+{%endif%}

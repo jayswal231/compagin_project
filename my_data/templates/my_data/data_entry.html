@@ -69,21 +69,23 @@
         <div class="col-lg-3">
           <label for="ward">Ward</label>
           <input class="form-control" placeholder="Valid (1 to 35)" type="number" min="1" max="35"
-            value="{{current_event.ward}}" disabled oninput="validity.valid||(value='');" required/>
+            value="{{current_event.ward}}" disabled oninput="validity.valid||(value='');" required />
         </div>
 
 
         <div class="person-responsible col-lg-6">
           <div class="form-group mt-3">
             <label for="responsible">Person Responsible</label>
-            <input type="text" class="form-control" id="responsible" value="{{current_event.person_responsible}}" name="person_responsible" required  disabled/>
+            <input type="text" class="form-control" id="responsible" value="{{current_event.person_responsible}}"
+              name="person_responsible" required disabled />
           </div>
         </div>
 
         <div class="person-responsible col-lg-6">
           <div class="form-group mt-3">
             <label for="responsible">Community</label>
-            <input type="text" class="form-control" id="responsible" value="{{current_event.community}}" name="community" required  disabled/>
+            <input type="text" class="form-control" id="responsible" value="{{current_event.community}}"
+              name="community" required disabled />
           </div>
         </div>
 
@@ -91,16 +93,19 @@
 
 
 
-    
+
     </div>
 
 
     <!-- Modal TO Add Participant Start -->
     <div class="add-data container">
+
+      {% if 'Role A' in current_roles and not current_event.submit_one %}
       <!-- Button trigger modal -->
       <button type="button" class="btn btn-primary mt-5" data-mdb-toggle="modal" data-mdb-target="#staticBackdrop">
         Add Participant Data
       </button>
+      {% endif %}
 
       <!-- Modal -->
       <div class="modal fade" id="staticBackdrop" data-mdb-backdrop="static" data-mdb-keyboard="false" tabindex="-1"
@@ -179,7 +184,7 @@
                         <input type="text" class="form-control" id="contact" name="contact" required />
                       </div>
 
-                      
+
                     </div>
                   </div>
                 </div>
@@ -231,12 +236,12 @@
           <td class="col small">{{participant.participation_category.name}}</td>
           <td class="col small">{{participant.contact}}</td>
           <td>
-            {% if not current_event.submitted_one %}
-            {% if "Role A" in current_roles %}
+            {% if not current_event.submit_one %}
             <a href="/event/participant/update/{{participant.id}}" class="btn btn-sm btn-primary">Edit</a>
             <a href="/event/participant/delete/{{participant.id}}" class="btn btn-sm btn-danger mt-2">Delete</a>
-            {% endif %}
-            {% endif %}
+            {% else %}
+            <a href="/event/participant/update/{{participant.id}}" class="btn btn-sm btn-primary">Edit</a>
+            {%endif%}
           </td>
         </tr>
         {% endfor %}
@@ -246,15 +251,28 @@
     <!-- Participant Data Table End -->
 
     {% if participants %}
-    <form method="POST">
-      {% csrf_token %}
-    <div class="container">
-      <div class="d-flex justify-content-end">
-        <input type="submit" class="btn btn-success" value="Save & Submit Data" name="save_submit">
-      </div>
-      <div class="small text-end">**Once you submit data you cannot edit or delete it.</div>
-    </div>
-  </form>
+
+
+    {% if 'Role A' in current_roles and not current_event.submit_one %}
+    <!-- Role A User Controls -->
+    {% include 'my_data/elements/participant_controls.html' %}
+    {%else%}
+
+    {% if 'Role B' in current_roles and not current_event.submit_two %}
+    <!-- Role B User Controls -->
+    {% include 'my_data/elements/participant_controls.html' %}
+    {%else%}
+
+    {% if 'Role C' in current_roles and not current_event.submit_three %}
+    <!-- Role C User Controls -->
+    {% include 'my_data/elements/participant_controls.html' %}
+    
+    {%endif%}
+    {%endif%}
+    {%endif%}
+
+
+
     {% endif %}
   </div>
 </div>

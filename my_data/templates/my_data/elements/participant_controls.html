@@ -1,0 +1,14 @@
+<form method="POST">
+    {% csrf_token %}
+    <div class="container mb-5">
+      <div class="small text-end mb-1 text-danger">**Once you submit data you cannot edit or delete it.</div>
+      <div class="d-flex justify-content-end">
+        {% if 'Role A' in current_roles and not current_event.submit_one %}
+        <input type="submit" class="btn btn-success" value="Save & Submit Data" name="save_submit">
+        {%else%}
+        <input type="submit" class="btn btn-success" value="Reviewed & Submit Data" name="save_submit">
+        {%endif%}
+      </div>
+    </div>
+  </form>
+  

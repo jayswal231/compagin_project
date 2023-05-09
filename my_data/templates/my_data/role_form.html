@@ -3,34 +3,86 @@
 
 {% block main%}
 <div class="container">
-    <form>
+  {% if message%}
+  <div class="alert alert-success">
+    {{message}}
+  </div>
+  {%endif%}
+
+  {% if error%}
+  <div class="alert alert-danger">
+    {{error}}
+    <li>User May Already Exist. Please Double Check</li>
+  </div>
+  {%endif%}
+    <form method="POST">
+      {% csrf_token %}
         <div class="mb-3">
           <label for="username" class="form-label">Username/Email</label>
-          <input type="email" class="form-control" id="username" required>
+          <input type="email" class="form-control" id="username" name="username" required>
         </div>
+
         <div class="mb-3">
-          <label for="password" class="form-label">Password</label>
-          <input type="password" class="form-control" id="password" required>
+          <label for="username" class="form-label">Username/Email</label>
+        <div class="input-group mb-3">
+          <input
+            type="password"
+            id="password"
+            class="form-control"
+            placeholder="Password"
+            name="password"
+          />
+          <button class="btn btn-outline-dark" type="button" id="show_password" data-mdb-ripple-color="dark">
+            Show Password
+          </button>
         </div>
+      </div>
         <div class="mb-3">
           <label for="user-role" class="form-label">User Role</label>
-          <select class="form-select" id="user-role" required>
+          <select class="form-select" id="user-role" name="role" required>
             <option value="">Choose...</option>
-            <option value="role-a">Role A</option>
-            <option value="role-b">Role B</option>
-            <option value="role-c">Role C</option>
+            <option value="Role A">Role A</option>
+            <option value="Role B">Role B</option>
+            <option value="Role C">Role C</option>
           </select>
         </div>
         <div class="mb-3">
           <label for="first-name" class="form-label">First Name</label>
-          <input type="text" class="form-control" id="first-name">
+          <input type="text" class="form-control" id="first-name" name="first_name">
         </div>
         <div class="mb-3">
           <label for="last-name" class="form-label">Last Name</label>
-          <input type="text" class="form-control" id="last-name">
+          <input type="text" class="form-control" id="last-name" name="last_name">
+        </div>
+
+        <div class="mb-3">
+          <label for="phone" class="form-label">Phone</label>
+          <input type="text" class="form-control" id="phone" name="phone">
+        </div>
+
+        <div class="mb-3">
+          <label for="address" class="form-label">Address</label>
+          <input type="text" class="form-control" id="address" name="address">
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
     </div>
 
 {% endblock %}
+
+
+{% block js %}
+<script>
+const passwordInput = document.getElementById("password");
+const showPasswordButton = document.getElementById("show_password");
+
+showPasswordButton.addEventListener("click", function() {
+  if (passwordInput.type === "password") {
+    passwordInput.type = "text";
+  } else {
+    passwordInput.type = "password";
+  }
+});
+
+</script>
+{%endblock%}

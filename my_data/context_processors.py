@@ -6,8 +6,6 @@ def my_context_processor(request):
     for role in request.user.groups.all():
         roles.append(role.name)
 
-    print(roles)
-
     ethnicities = Participants.get_ethnicity_choices()  
     categories = ParticipationCategory.objects.all()
 
