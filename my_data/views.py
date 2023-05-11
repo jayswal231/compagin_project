@@ -79,6 +79,9 @@ def create_user(request):
             )
 
             my_user.groups.add(my_group)
+
+            UserProfile.objects.create(user=my_user, phone=phone, address=address)
+            
             context["message"] = "User Successfully Created"
         except:
             context["error"] = "Error Creating User"
