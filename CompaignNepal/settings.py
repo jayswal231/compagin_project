@@ -143,7 +143,7 @@ if DEBUG:
         BASE_DIR / "static",
     ]
 else:
-    STATIC_ROOT = "/static/"
+    STATIC_ROOT = "static/"
 
 
 # Default primary key field type
