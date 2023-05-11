@@ -90,13 +90,9 @@ if DEBUG:
     }
 else:
     DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'nepalhop_data',
-        'USER': 'nepalhop_data_manager',
-        'PASSWORD': 'campaignNepalData!@#123',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'live_db.sqlite3',
         }
     }
 
