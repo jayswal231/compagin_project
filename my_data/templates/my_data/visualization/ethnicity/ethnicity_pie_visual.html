@@ -1,27 +1,4 @@
 
   <canvas id="myChartEthnicityPie"></canvas>
-  <script>
-    var ctx = document.getElementById("myChartEthnicityPie").getContext("2d");
-    var myChart = new Chart(ctx, {
-      type: "pie",
-      data: {
-        labels: ["Dalit", "Janajatti", "Muslim", "Brahmin/Kshetri", "Others"],
-        datasets: [
-          {
-            label: "Total Participants",
-            data: [25, 23, 30, 28, 10],
-            backgroundColor: ["red", "orange", "yellow", "green", "blue"],
-          }
-        ]
-      },
-      options: {
-        title: {
-          text: "Pie Chart of Ethnicity Data"
-        },
-        legend: {
-          position: "right"
-        }
-      }
-    });
-  </script>
+
 

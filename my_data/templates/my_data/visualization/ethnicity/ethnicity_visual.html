@@ -6,45 +6,5 @@
 </head>
 <body>
   <canvas id="myChartEthnicity"></canvas>
-  <script>
-    var ctx = document.getElementById("myChartEthnicity").getContext("2d");
-    var myChart = new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: ["Dalit", "Janajatti", "Muslim", "Brahmin/Kshetri", "Others"],
-        datasets: [
-          {
-            label: "Male",
-            data: [25, 23, 30, 28, 10],
-            backgroundColor: "red",
-          },
-          {
-            label: "Female",
-            data: [25, 23, 30, 28, 10],
-            backgroundColor: "blue"
-          },
-          {
-            label: "Others",
-            data: [25, 23, 30, 28, 10],
-            backgroundColor: "grey"
-          }
-        ]
-      },
-      options: {
-        title: {
-          text: "Bar Chart of Ethnicity Data"
-        },
-        scales: {
-          yAxes: [
-            {
-              ticks: {
-                beginAtZero: true
-              }
-            }
-          ]
-        }
-      }
-    });
-  </script>
 </body>
 </html>

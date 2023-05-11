@@ -1,26 +1,4 @@
+{% load static %}
 
-  <canvas id="myChartCategoryPie"></canvas>
-  <script>
-    var ctx = document.getElementById("myChartCategoryPie").getContext("2d");
-    var myChart = new Chart(ctx, {
-      type: "pie",
-      data: {
-        labels: ["Pregnant Women", "Lactating Women", "Recent Delivered Women", "Adolescent Group", "Local Level Authorities", "Government Authority", "Caretaker", "Teachers", "Students", "Mothers Group", "FCHB", "Health Personnel", "ANM/Nurses"],
-        datasets: [
-          {
-            label: "Total Participants",
-            data: [25, 23, 30, 28, 10, 15, 12, 10, 8, 7, 6, 5, 4, 3],
-            backgroundColor: ["red", "orange", "yellow", "green", "blue", "indigo", "violet", "black", "brown", "gray", "silver", "gold", "white"],
-          }
-        ]
-      },
-      options: {
-        title: {
-          text: "Pie Chart of Categories Data"
-        },
-        legend: {
-          position: "right"
-        }
-      }
-    });
-  </script>
+<canvas id="myChartCategoryPie"></canvas>
+

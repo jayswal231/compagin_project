@@ -88,7 +88,7 @@
             <label for="ward">Ward</label>
             <input name="ward" class="form-control" placeholder="Valid (1 to 35)" type="number" min="1" max="35"
               oninput="validity.valid||(value='');" />
-              {% if "/event/update" in request.path %}
+            {% if "/event/update" in request.path %}
             <input type="text" class="form-control" disabled value="{{object.ward}}">
             {%endif%}
           </div>
@@ -105,7 +105,7 @@
             <input type="text" class="form-control" disabled value="{{object.person_responsible}}">
             {%endif%}
           </div>
-    
+
           <div class="person-responsible col-lg-6">
             <div class="form-group mt-3">
               <label for="community">Community</label>
@@ -117,11 +117,11 @@
           </div>
 
         </div>
-      
+
 
       </div>
 
-     
+
 
       <div class="d-flex justify-content-end w-100 mt-3">
         {% if "event/create" in request.path %}
@@ -137,6 +137,7 @@
 
   </div>
 </div>
+
 
 {% endblock %}
 
