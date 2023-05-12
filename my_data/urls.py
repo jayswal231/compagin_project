@@ -1,6 +1,8 @@
 from django.urls import path
 from .views import *
 urlpatterns = [
+    # upload data
+    path('uploaddata/', uploaddata, name='uploaddata'),
 
     # homepage
     path('', home, name="homepage"),

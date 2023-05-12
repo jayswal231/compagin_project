@@ -21,10 +21,52 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 
 from django.contrib.auth.models import User, Group
-
+import csv
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import UserPassesTestMixin
 # Create your views here.
+import csv
+from django.http import JsonResponse
+from .models import Province, District, Palika
+
+# for upload scv data  into model : province, district, palika
+def uploaddata(request):
+    if request.method == 'POST':
+        if Province.objects.exists() or District.objects.exists() or Palika.objects.exists():
+            Province.objects.all().delete()
+            District.objects.all().delete()
+            Palika.objects.all().delete()
+
+        csv_file = request.FILES['mydata.csv'] 
+        decoded_file = csv_file.read().decode('utf-8').splitlines()
+        reader = csv.DictReader(decoded_file)
+
+        for row in reader:
+            province, created = Province.objects.get_or_create(name=row['province'])
+            district, created = District.objects.get_or_create(name=row['district'], province=province)
+            palika, created = Palika.objects.get_or_create(name=row['palika'], district=district)
+
+        provinces = Province.objects.all()
+        districts = District.objects.all()
+        palikas = Palika.objects.all()
+
+        data = []
+        for province in provinces:
+            province_data = {
+                'name': province.name,
+                'districts': []
+            }
+            for district in province.district_set.all():
+                district_data = {
+                    'name': district.name,
+                    'palikas': []
+                }
+                for palika in district.palika_set.all():
+                    district_data['palikas'].append(palika.name)
+                province_data['districts'].append(district_data)
+            data.append(province_data)
+        return JsonResponse({'data': data})
+    return render(request, 'upload_data.html')
 
 
 def home(request):
