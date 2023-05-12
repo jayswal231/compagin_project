@@ -1,42 +1,7 @@
+{% load static %}
 
-  <canvas id="myChartCategory"></canvas>
-  <script>
-    var ctx = document.getElementById("myChartCategory").getContext("2d");
-    var myChart = new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: ["Pregnant Women", "Lactating Women", "Recent Delivered Women", "Adolescent Group", "Local Level Authorities", "Government Authority", "Caretaker", "Teachers", "Students", "Mothers Group", "FCHB", "Health Personnel", "ANM/Nurses", "Others"],
-        datasets: [
-          {
-            label: "Male",
-            data: [25, 23, 30, 28, 10, 15, 12, 10, 8, 7, 6, 5, 4, 3],
-            backgroundColor: "red",
-          },
-          {
-            label: "Female",
-            data: [25, 23, 30, 28, 10, 15, 12, 10, 8, 7, 6, 5, 4, 3],
-            backgroundColor: "blue"
-          },
-          {
-            label: "Other",
-            data: [25, 23, 30, 28, 10, 15, 12, 10, 8, 7, 6, 5, 4, 3],
-            backgroundColor: "grey"
-          }
-        ]
-      },
-      options: {
-        title: {
-          text: "Bar Graph of Categories Data"
-        },
-        scales: {
-          yAxes: [
-            {
-              ticks: {
-                beginAtZero: true
-              }
-            }
-          ]
-        }
-      }
-    });
-  </script>
+<canvas id="myChartCategory"></canvas>
+
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+

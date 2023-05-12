@@ -88,7 +88,7 @@
                 <!-- Right links -->
                 <ul class="navbar-nav ms-auto d-flex flex-row align-items-center">
                     <li class="nav-item">
-                        {{request.user.email}}
+                        {{request.user.email}} ({{request.user.groups.all.0}})
                     </li>
                     <!-- Avatar -->
                     <li class="nav-item dropdown">
@@ -127,7 +127,6 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
-    <script src="{% static 'js/data_entry.js' %}"></script>
 
     
     {% block js %}

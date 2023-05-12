@@ -1,23 +1,2 @@
+<canvas id="myChart"></canvas>
 
-  <canvas id="myChart"></canvas>
-  <script>
-    var ctx = document.getElementById("myChart").getContext("2d");
-    var myChart = new Chart(ctx, {
-      type: "pie",
-      data: {
-        labels: ["Male", "Female", "Trans_sex"],
-        datasets: [
-          {
-            label: "Percentage of Participants",
-            data: [50, 30, 20],
-            backgroundColor: ["red", "blue", "green"]
-          }
-        ]
-      },
-      options: {
-        title: {
-          text: "Pie Chart"
-        }
-      }
-    });
-  </script>
