@@ -3,7 +3,7 @@ from .views import *
 urlpatterns = [
     # upload data
     path('uploaddata/', uploaddata, name='uploaddata'),
-
+    path('uploadproject', upload_project_activity, name='uploadproject'),
     # homepage
     path('', home, name="homepage"),
     path('login/', login_view, name="login"),

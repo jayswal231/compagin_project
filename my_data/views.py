@@ -29,7 +29,7 @@ import csv
 from django.http import JsonResponse
 from .models import Province, District, Palika
 
-# for upload scv data  into model : province, district, palika
+# for upload csv data  into model : province, district, palika
 def uploaddata(request):
     if request.method == 'POST':
         if Province.objects.exists() or District.objects.exists() or Palika.objects.exists():
@@ -67,6 +67,41 @@ def uploaddata(request):
             data.append(province_data)
         return JsonResponse({'data': data})
     return render(request, 'upload_data.html')
+
+
+# for upload project and activity from csv file into model
+def upload_project_activity(request):
+    if request.method == 'POST':
+        if Project.objects.exists() or Activity.objects.exists():
+            Project.objects.all().delete()
+            Activity.objects.all().delete()
+        
+        csv_file = request.FILES['mydata.csv']
+        decoded_file = csv_file.read().decode('utf-8').splitlines()
+        reader = csv.DictReader(decoded_file)
+
+        for row in reader:
+            project, created = Project.objects.get_or_create(name=row['project'], code=row['project_code'])
+            activity, created = Activity.objects.get_or_create(name=row['activity'], code=row['activity_code'], project=project)
+
+        projects = Project.objects.all()
+        data = []
+        for project in projects:
+            project_data = {
+                "project-name": project.name,
+                "project-code": project.code,
+                "activity": []
+            }
+            for activity in project.activity_set.all():
+                activity_data = {
+                    "name": activity.name,
+                    "code": activity.code
+                }
+                project_data['activity'].append(activity_data)
+            data.append(project_data)
+        return JsonResponse({'data': data})
+    return render(request, 'upload_project.html')
+
 
 
 def home(request):
